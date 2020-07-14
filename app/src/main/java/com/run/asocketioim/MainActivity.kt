@@ -16,7 +16,7 @@ import java.net.URISyntaxException
 
 class MainActivity : BaseActivity<BaseViewModel>() {
 
-    private var socket: Socket? = null
+    private lateinit var socket: Socket
     private lateinit var callback: Emitter.Listener
 
 
@@ -33,7 +33,6 @@ class MainActivity : BaseActivity<BaseViewModel>() {
 
     override fun initPage(savedInstanceState: Bundle?) {
         callback = Emitter.Listener {
-            socket?.emit("ping", "pong");
             it?.let {
                 if (it.isNotEmpty())
                     Log.e("TAG-->", "onConnect--${it.size}--${it.toString()}--${it[0]})")
@@ -43,15 +42,14 @@ class MainActivity : BaseActivity<BaseViewModel>() {
             initSocketIO()
         }
         textView.setOnClickListener {
-            socket?.emit("ping")
+            socket.emit("ping")
         }
 
     }
 
     private fun initSocketIO() {
-        socket?.disconnect()
         socket = IO.socket("http://10.180.5.163:${edit.text}/")
-        socket = socket?.connect()
+        socket = socket.connect()
         Handler(Looper.getMainLooper()).postDelayed({
             Toast.makeText(this, "${socket?.connected()}", Toast.LENGTH_SHORT).show()
         }, 200)
@@ -59,9 +57,14 @@ class MainActivity : BaseActivity<BaseViewModel>() {
             socket?.on(Socket.EVENT_CONNECT, callback)
             socket?.on(Socket.EVENT_CONNECT_ERROR, callback)
             socket?.on(Socket.EVENT_DISCONNECT, callback)
-            socket?.on("my event", callback)
+            socket?.on("client", callback)
         } catch (e: URISyntaxException) {
             e.printStackTrace()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        socket?.disconnect()
     }
 }
