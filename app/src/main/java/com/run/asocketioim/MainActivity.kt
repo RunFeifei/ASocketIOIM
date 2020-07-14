@@ -1,18 +1,23 @@
 package com.run.asocketioim
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
-import com.google.gson.Gson
+import android.widget.Toast
+import com.github.nkzawa.emitter.Emitter
+import com.github.nkzawa.socketio.client.IO
+import com.github.nkzawa.socketio.client.Socket
 import com.run.asocketioim.base.BaseActivity
 import com.run.asocketioim.base.BaseViewModel
-import com.run.im.bean.IMMessage
 import kotlinx.android.synthetic.main.activity_main.*
-import org.litepal.LitePal
-import org.litepal.LitePal.findAll
-import org.litepal.extension.find
+import java.net.URISyntaxException
 
 
 class MainActivity : BaseActivity<BaseViewModel>() {
+
+    private var socket: Socket? = null
+    private lateinit var callback: Emitter.Listener
 
 
     override fun initViewModel(): BaseViewModel {
@@ -27,20 +32,36 @@ class MainActivity : BaseActivity<BaseViewModel>() {
     }
 
     override fun initPage(savedInstanceState: Bundle?) {
+        callback = Emitter.Listener {
+            socket?.emit("ping", "pong");
+            it?.let {
+                if (it.isNotEmpty())
+                    Log.e("TAG-->", "onConnect--${it.size}--${it.toString()}--${it[0]})")
+            }
+        }
+        textView0.setOnClickListener {
+            initSocketIO()
+        }
         textView.setOnClickListener {
-            val msg = IMMessage()
-            msg.formUserID = -1
-            msg.toUserID = -1
-            msg.text = "123"
-            msg.timeStamp = System.currentTimeMillis()
-            msg.save()
+            socket?.emit("ping")
+        }
 
-            val datas: List<IMMessage> = findAll<IMMessage>(IMMessage::class.java)
-            Log.e("MainActivity-->", Gson().toJson(datas))
+    }
 
-            val data = LitePal.find<IMMessage>(0)
-            Log.e("MainActivity-->", Gson().toJson(data))
-
+    private fun initSocketIO() {
+        socket?.disconnect()
+        socket = IO.socket("http://10.180.5.163:${edit.text}/")
+        socket = socket?.connect()
+        Handler(Looper.getMainLooper()).postDelayed({
+            Toast.makeText(this, "${socket?.connected()}", Toast.LENGTH_SHORT).show()
+        }, 200)
+        try {
+            socket?.on(Socket.EVENT_CONNECT, callback)
+            socket?.on(Socket.EVENT_CONNECT_ERROR, callback)
+            socket?.on(Socket.EVENT_DISCONNECT, callback)
+            socket?.on("my event", callback)
+        } catch (e: URISyntaxException) {
+            e.printStackTrace()
         }
     }
 }
