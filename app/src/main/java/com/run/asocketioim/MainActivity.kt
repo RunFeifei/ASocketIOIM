@@ -124,9 +124,8 @@ class MainActivity : BaseActivity<BaseViewModel>() {
             if (it.isNullOrEmpty()) {
                 return@Listener
             }
-            if (it[0] is JSONObject) {
-//                Log.e("TAG-->", "my_response--${it.size}--${it.toString()}--${it[0]})")
-            }
+            toast(it[0].toString())
+            Log.e("TAG-->", "my_response--${it[0]})")
         })
         socket.on("my_pong", Emitter.Listener {
             if (it.isNullOrEmpty()) {
