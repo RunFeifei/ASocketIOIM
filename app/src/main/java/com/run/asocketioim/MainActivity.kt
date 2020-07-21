@@ -45,15 +45,27 @@ class MainActivity : BaseActivity<BaseViewModel>() {
             json.put("count", "123")
             socket.emit("my_event", json)
         }
-        join_room.setOnClickListener {
+        join_room0.setOnClickListener {
             val json = JSONObject()
             json.put("room", "room0")
             json.put("count", "123")
             socket.emit("join", json)
         }
-        leave_room.setOnClickListener {
+        join_room1.setOnClickListener {
+            val json = JSONObject()
+            json.put("room", "room1")
+            json.put("count", "123")
+            socket.emit("join", json)
+        }
+        leave_room0.setOnClickListener {
             val json = JSONObject()
             json.put("room", "room0")
+            json.put("count", "123")
+            socket.emit("leave", json)
+        }
+        leave_room1.setOnClickListener {
+            val json = JSONObject()
+            json.put("room", "room1")
             json.put("count", "123")
             socket.emit("leave", json)
         }
@@ -63,7 +75,7 @@ class MainActivity : BaseActivity<BaseViewModel>() {
     }
 
     private fun initSocketIO() {
-        socket = IO.socket("http://10.180.5.163:5000/test")
+        socket = IO.socket("http://10.180.5.163:5000/")
         socket = socket.connect()
         Handler(Looper.getMainLooper()).postDelayed({
             Toast.makeText(this, "${socket.connected()}", Toast.LENGTH_SHORT).show()
