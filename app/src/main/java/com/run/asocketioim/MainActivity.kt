@@ -75,10 +75,10 @@ class MainActivity : BaseActivity<BaseViewModel>() {
     }
 
     private fun initSocketIO() {
-        socket = IO.socket("http://10.180.5.163:5000/")
+        socket = IO.socket("http://10.180.5.163:5000")
         socket = socket.connect()
         Handler(Looper.getMainLooper()).postDelayed({
-            Toast.makeText(this, "${socket.connected()}", Toast.LENGTH_SHORT).show()
+            toast(if (socket.connected()) "连接OK" else "连接错误")
         }, 200)
         onSocket()
     }
@@ -121,6 +121,13 @@ class MainActivity : BaseActivity<BaseViewModel>() {
             }
         })
         socket.on("my_response", Emitter.Listener {
+            if (it.isNullOrEmpty()) {
+                return@Listener
+            }
+            toast(it[0].toString())
+            Log.e("TAG-->", "my_response--${it[0]})")
+        })
+        socket.on("my response", Emitter.Listener {
             if (it.isNullOrEmpty()) {
                 return@Listener
             }
