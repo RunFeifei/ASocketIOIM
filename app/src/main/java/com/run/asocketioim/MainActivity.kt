@@ -72,6 +72,12 @@ class MainActivity : BaseActivity<BaseViewModel>() {
         room_send.setOnClickListener {
             socket.emit("testroom")
         }
+        text.setOnClickListener {
+            val json = JSONObject()
+            json.put("room", "room1")
+            json.put("name", "123")
+            socket.emit("text", json)
+        }
     }
 
     private fun initSocketIO() {
@@ -84,15 +90,6 @@ class MainActivity : BaseActivity<BaseViewModel>() {
     }
 
     private fun onSocket() {
-        socket.on(Socket.EVENT_MESSAGE, Emitter.Listener {
-            if (it.isNullOrEmpty()) {
-                return@Listener
-            }
-            it[0]?.let { msg ->
-                Log.e("TAG-->", "EVENT_MESSAGE--${msg}")
-                toast("EVENT_MESSAGE--${msg}")
-            }
-        })
         socket.on(Socket.EVENT_CONNECT, Emitter.Listener {
             if (it.isNullOrEmpty()) {
                 return@Listener
@@ -132,14 +129,14 @@ class MainActivity : BaseActivity<BaseViewModel>() {
                 return@Listener
             }
             toast(it[0].toString())
-            Log.e("TAG-->", "my_response--${it[0]})")
+            Log.e("TAG-->", "my response--${it[0]})")
         })
         socket.on("my_pong", Emitter.Listener {
             if (it.isNullOrEmpty()) {
                 return@Listener
             }
             if (it[0] is JSONObject) {
-                Log.e("TAG-->", "my_response--${it.size}--${it.toString()}--${it[0]})")
+                Log.e("TAG-->", "my_pong--${it.size}--${it.toString()}--${it[0]})")
                 toast("my_pong--${it.size}--${it.toString()}--${it[0]})")
             }
         })
@@ -150,7 +147,19 @@ class MainActivity : BaseActivity<BaseViewModel>() {
             Log.e("TAG-->", "room get ${it[0]}")
             toast("room get ${it[0]}")
         })
-
+        socket.on("sendback", Emitter.Listener {
+            Log.e("TAG-->", "sendback")
+            if (it.isNullOrEmpty()) {
+                return@Listener
+            }
+        })
+        socket.on(Socket.EVENT_MESSAGE, Emitter.Listener {
+            if (it.isNullOrEmpty()) {
+                return@Listener
+            }
+            toast("${it[0]}")
+            Log.e("TAG-->EVENT_MESSAGE", "${it[0]}")
+        })
     }
 
     override fun onDestroy() {
