@@ -147,12 +147,13 @@ class MainActivity : BaseActivity<BaseViewModel>() {
             Log.e("TAG-->", "room get ${it[0]}")
             toast("room get ${it[0]}")
         })
-        socket.on("HeartBeat", Emitter.Listener {
+        socket.on("heart_beat", Emitter.Listener {
             Log.e("TAG-->", "HeartBeat")
             if (it.isNullOrEmpty()) {
                 return@Listener
             }
         })
+
         socket.on(Socket.EVENT_MESSAGE, Emitter.Listener {
             if (it.isNullOrEmpty()) {
                 return@Listener
