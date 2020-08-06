@@ -5,31 +5,38 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import com.github.nkzawa.emitter.Emitter
 import com.github.nkzawa.socketio.client.IO
 import com.github.nkzawa.socketio.client.Socket
 import com.run.asocketioim.base.BaseActivity
-import com.run.asocketioim.base.BaseViewModel
+import com.run.asocketioim.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONObject
 
 
-class MainActivity : BaseActivity<BaseViewModel>() {
+class MainActivity : BaseActivity<MainViewModel>() {
 
     private lateinit var socket: Socket
 
-    override fun initViewModel(): BaseViewModel {
-        return BaseViewModel()
+    override fun initViewModel(): MainViewModel {
+        return MainViewModel()
     }
 
     override fun layoutId(): Int {
         return R.layout.activity_main
     }
 
-    override fun initLivedata(viewModel: BaseViewModel) {
+    override fun initLivedata(viewModel: MainViewModel) {
+        viewModel.login.observe(this, Observer {
+            Log.e("TAG-->", it.toString())
+        })
     }
 
     override fun initPage(savedInstanceState: Bundle?) {
+        login.setOnClickListener {
+            viewModel.login("aaa", "aabc")
+        }
         connect.setOnClickListener {
             initSocketIO()
         }
@@ -84,7 +91,11 @@ class MainActivity : BaseActivity<BaseViewModel>() {
         socket = IO.socket("http://10.180.5.163:5000")
         socket = socket.connect()
         Handler(Looper.getMainLooper()).postDelayed({
-            toast(if (socket.connected()) "连接OK" else "连接错误")
+            val connected = socket.connected()
+            toast(if (connected) "连接OK" else "连接错误")
+            if (!connected) {
+                return@postDelayed
+            }
         }, 200)
         onSocket()
     }
@@ -149,9 +160,6 @@ class MainActivity : BaseActivity<BaseViewModel>() {
         })
         socket.on("heart_beat", Emitter.Listener {
             Log.e("TAG-->", "HeartBeat")
-            if (it.isNullOrEmpty()) {
-                return@Listener
-            }
         })
 
         socket.on(Socket.EVENT_MESSAGE, Emitter.Listener {
