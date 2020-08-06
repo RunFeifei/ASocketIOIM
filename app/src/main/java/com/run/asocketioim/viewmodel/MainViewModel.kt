@@ -1,9 +1,11 @@
 package com.run.asocketioim.viewmodel
 
-import androidx.lifecycle.MutableLiveData
+import android.util.Log
 import com.run.asocketioim.base.BaseViewModel
 import com.run.asocketioim.bean.User
 import com.run.asocketioim.net.API
+import com.run.asocketioim.widget.APPsp
+import com.run.asocketioim.widget.Common
 import com.uestc.request.handler.Request
 
 /**
@@ -13,7 +15,6 @@ class MainViewModel : BaseViewModel() {
 
     private val service by lazy { Request.apiService(API::class.java) }
 
-    val login = MutableLiveData<User>()
 
     fun login(name: String, password: String) {
         apiDSL<User> {
@@ -21,7 +22,14 @@ class MainViewModel : BaseViewModel() {
                 service.login(name, password)
             }
             onResponse {
-                login.value = it
+                Log.e("TAG-->", it.toString())
+                showToast("登录成功")
+                Common.user = it
+                APPsp.user = it
+            }
+            onError {
+                showToast("登录失败")
+                false
             }
         }
     }

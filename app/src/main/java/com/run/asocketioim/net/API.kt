@@ -3,6 +3,7 @@ package com.run.asocketioim.net
 import com.run.asocketioim.bean.User
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 /**
@@ -16,4 +17,11 @@ interface API {
         @Field("username") username: String,
         @Field("password") password: String
     ): User
+
+    @GET("/")
+    suspend fun check0(): String
+
+    @POST("/")
+    @FormUrlEncoded
+    suspend fun check1(): String
 }

@@ -1,6 +1,9 @@
 package com.run.asocketioim
 
 import android.content.Context
+import com.forjrking.preferences.kt.PreferenceHolder
+import com.forjrking.preferences.serialize.GsonSerializer
+import com.google.gson.Gson
 import com.uestc.request.handler.Request
 import org.litepal.LitePalApplication
 
@@ -12,6 +15,7 @@ class App : LitePalApplication() {
     override fun onCreate() {
         super.onCreate()
         initRetrofit()
+        initSP()
     }
 
     private fun initRetrofit() {
@@ -26,6 +30,11 @@ class App : LitePalApplication() {
                 it
             }
         }
+    }
+
+    private fun initSP() {
+        PreferenceHolder.context = this
+        PreferenceHolder.serializer = GsonSerializer(Gson())
     }
 
     private fun getApp(): Context {
