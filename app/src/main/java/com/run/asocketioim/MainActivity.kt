@@ -33,6 +33,9 @@ class MainActivity : BaseActivity<MainViewModel>() {
     }
 
     override fun initPage(savedInstanceState: Bundle?) {
+        register.setOnClickListener {
+            viewModel.register("aaa", "aabc")
+        }
         login.setOnClickListener {
             viewModel.login("aaa", "aabc")
         }

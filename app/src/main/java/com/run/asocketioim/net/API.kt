@@ -13,10 +13,12 @@ interface API {
 
     @POST("login")
     @FormUrlEncoded
-    suspend fun login(
-        @Field("username") username: String,
-        @Field("password") password: String
-    ): User
+    suspend fun login(@Field("username") username: String, @Field("password") password: String): User
+
+
+    @POST("register")
+    @FormUrlEncoded
+    suspend fun register(@Field("username") username: String, @Field("password") password: String): Any
 
     @GET("/")
     suspend fun check0(): String

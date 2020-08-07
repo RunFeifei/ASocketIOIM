@@ -34,5 +34,21 @@ class MainViewModel : BaseViewModel() {
         }
     }
 
+    fun register(name: String, password: String) {
+        apiDSL<Any> {
+            onRequest {
+                service.register(name, password)
+            }
+            onResponse {
+                Log.e("TAG-->", it.toString())
+                showToast("注册成功")
+            }
+            onError {
+                showToast("注册失败")
+                false
+            }
+        }
+    }
+
 
 }
