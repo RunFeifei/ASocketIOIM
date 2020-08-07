@@ -8,10 +8,12 @@ import android.widget.Toast
 import com.github.nkzawa.emitter.Emitter
 import com.github.nkzawa.socketio.client.IO
 import com.github.nkzawa.socketio.client.Socket
+import com.google.gson.Gson
 import com.run.asocketioim.base.BaseActivity
 import com.run.asocketioim.bean.Message
 import com.run.asocketioim.viewmodel.MainViewModel
 import com.run.asocketioim.widget.Common.getUser
+import com.run.asocketioim.widget.MessageType
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -40,6 +42,16 @@ class MainActivity : BaseActivity<MainViewModel>() {
         disconnect.setOnClickListener {
             socket.disconnect()
         }
+        text.setOnClickListener {
+            val message = Message(
+                text = "text",
+                type = MessageType.MESSAGE_CHAT_PRIVATE,
+                room_from = getUser().room_private,
+                room_to = getUser().room_private
+            )
+            socket.emit(Socket.EVENT_MESSAGE, message.toJSONObject())
+        }
+
     }
 
     private fun initSocketIO() {
@@ -59,6 +71,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
             toast("连接成功")
             val message = Message(
                 text = "join_room",
+                type = MessageType.MESSAGE_JOIN_ROOM,
                 room_from = getUser().room_private,
                 room_to = getUser().room_private
             )
@@ -79,6 +92,24 @@ class MainActivity : BaseActivity<MainViewModel>() {
             }
             toast("${it[0]}")
             Log.e("TAG-->EVENT_MESSAGE", "${it[0]}")
+        })
+        socket.on("message_ack", Emitter.Listener {
+            if (it.isNullOrEmpty()) {
+                return@Listener
+            }
+            Log.e("TAG-->message_ack", "${it[0]}")
+            //把消息标注为服务器收到
+        })
+        socket.on("join_room", Emitter.Listener {
+            if (it.isNullOrEmpty()) {
+                return@Listener
+            }
+            Log.e("TAG-->message_ack", "${it[0]}")
+            val room = Gson().fromJson(it[0].toString(), Message::class.java).room_from
+            if (getUser().room_private == room) {
+                toast("成功加入自己的房间")
+            }
+            //把消息标注为服务器收到
         })
     }
 

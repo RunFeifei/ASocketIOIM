@@ -11,6 +11,7 @@ import java.io.Serializable
 class Message : Serializable {
 
     internal var text: String = ""
+    internal var type: Int = 0
     internal var is_send_to_server: Boolean = true
     internal var time_client: Long = 0
     internal var room_from: String = ""
@@ -20,6 +21,7 @@ class Message : Serializable {
 
     constructor(
         text: String,
+        type: Int,
         is_send_to_server: Boolean = true,
         time_client: Long = System.currentTimeMillis(),
         room_from: String,
@@ -28,6 +30,7 @@ class Message : Serializable {
         uid_to: Long? = null
     ) {
         this.text = text
+        this.type = type
         this.is_send_to_server = is_send_to_server
         this.time_client = time_client
         this.room_from = room_from
@@ -44,6 +47,7 @@ class Message : Serializable {
     fun toJSONObject(): JSONObject {
         val json = JSONObject()
         json.put("text", text)
+        json.put("type", type)
         json.put("is_send_to_server", is_send_to_server)
         json.put("time_client", time_client)
         json.put("room_from", room_from)

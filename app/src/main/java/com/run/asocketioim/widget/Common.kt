@@ -27,3 +27,16 @@ object Common {
 object APPsp : PreferenceHolder("APPsp", null, false, false) {
     var user: User by bindToPreferenceField(User())
 }
+
+
+class MessageType {
+    companion object {
+        val MESSAGE_CHAT_GROUP = 0
+        val MESSAGE_CHAT_PRIVATE = 1
+        val MESSAGE_JOIN_ROOM = 2
+        val MESSAGE_EXIT_ROOM = 3
+        val MESSAGE_ACK = 4
+        val MESSAGE_BROADCAST = 5
+    }
+}
+
