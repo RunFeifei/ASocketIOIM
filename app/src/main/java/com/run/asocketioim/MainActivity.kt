@@ -14,6 +14,7 @@ import com.run.asocketioim.bean.Message
 import com.run.asocketioim.viewmodel.MainViewModel
 import com.run.asocketioim.widget.Common.getUser
 import com.run.asocketioim.widget.MessageType
+import com.run.asocketioim.widget.getRandomText
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -33,11 +34,13 @@ class MainActivity : BaseActivity<MainViewModel>() {
     }
 
     override fun initPage(savedInstanceState: Bundle?) {
+        val name = getRandomText(5)
+        edittext.text = "当前用户为${name}"
         register.setOnClickListener {
-            viewModel.register("aaa", "aabc")
+            viewModel.register(name, "aabc")
         }
         login.setOnClickListener {
-            viewModel.login("aaa", "aabc")
+            viewModel.login(name, "aabc")
         }
         connect.setOnClickListener {
             initSocketIO()
@@ -107,9 +110,10 @@ class MainActivity : BaseActivity<MainViewModel>() {
             if (it.isNullOrEmpty()) {
                 return@Listener
             }
+            val message = Gson().fromJson(it[0].toString(), Message::class.java)
+            toast("${message.uid_from} 成功加入自己的房间")
             Log.e("TAG-->message_ack", "${it[0]}")
-            val room = Gson().fromJson(it[0].toString(), Message::class.java).room_from
-            if (getUser().room_private == room) {
+            if (getUser().room_private == message.room_from) {
                 toast("成功加入自己的房间")
             }
             //把消息标注为服务器收到

@@ -10,6 +10,7 @@ import java.io.Serializable
  */
 class Message : Serializable {
 
+    internal var id: Int = 0
     internal var text: String = ""
     internal var type: Int = 0
     internal var is_send_to_server: Boolean = true
