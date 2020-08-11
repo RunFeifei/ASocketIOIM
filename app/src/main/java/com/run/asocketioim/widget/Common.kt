@@ -7,6 +7,9 @@ import com.run.asocketioim.bean.User
  * Created by PengFeifei on 2020/8/6.
  */
 
+
+val LOCAL_IP = "http://10.180.5.207:5000"
+
 object Common {
     var user: User? = null
 

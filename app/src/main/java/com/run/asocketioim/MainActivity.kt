@@ -13,6 +13,7 @@ import com.run.asocketioim.base.BaseActivity
 import com.run.asocketioim.bean.Message
 import com.run.asocketioim.viewmodel.MainViewModel
 import com.run.asocketioim.widget.Common.getUser
+import com.run.asocketioim.widget.LOCAL_IP
 import com.run.asocketioim.widget.MessageType
 import com.run.asocketioim.widget.getRandomText
 import kotlinx.android.synthetic.main.activity_main.*
@@ -61,7 +62,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
     }
 
     private fun initSocketIO() {
-        socket = IO.socket("http://10.180.5.163:5000")
+        socket = IO.socket(LOCAL_IP)
         socket = socket.connect()
         Handler(Looper.getMainLooper()).postDelayed({
             if (socket.connected()) {
@@ -111,9 +112,12 @@ class MainActivity : BaseActivity<MainViewModel>() {
                 return@Listener
             }
             val message = Gson().fromJson(it[0].toString(), Message::class.java)
-            toast("${message.uid_from} 成功加入自己的房间")
-            Log.e("TAG-->message_ack", "${it[0]}")
-            if (getUser().room_private == message.room_from) {
+            val isSelf = getUser().room_private == message.room_from
+            Log.e(
+                "TAG-->join_room",
+                "${it[0]}---${getUser().room_private}--${isSelf}"
+            )
+            if (isSelf) {
                 toast("成功加入自己的房间")
             }
             //把消息标注为服务器收到

@@ -4,6 +4,7 @@ import android.content.Context
 import com.forjrking.preferences.kt.PreferenceHolder
 import com.forjrking.preferences.serialize.GsonSerializer
 import com.google.gson.Gson
+import com.run.asocketioim.widget.LOCAL_IP
 import com.uestc.request.handler.Request
 import org.litepal.LitePalApplication
 
@@ -19,7 +20,7 @@ class App : LitePalApplication() {
     }
 
     private fun initRetrofit() {
-        Request.init(getApp(), "http://10.180.5.163:5000") {
+        Request.init(getApp(), LOCAL_IP) {
             okHttp {
                 //配置okhttp
                 it
