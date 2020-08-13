@@ -27,7 +27,7 @@ class Message : Serializable {
         time_client: Long = System.currentTimeMillis(),
         room_from: String,
         room_to: String,
-        uid_from: Long = getUser().user_id,
+        uid_from: Long = getUser().id,
         uid_to: Long? = null
     ) {
         this.text = text

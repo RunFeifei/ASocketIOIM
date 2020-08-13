@@ -1,10 +1,7 @@
 package com.run.asocketioim.net
 
 import com.run.asocketioim.bean.User
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.GET
-import retrofit2.http.POST
+import retrofit2.http.*
 
 /**
  * Created by PengFeifei on 2020/8/5.
@@ -19,6 +16,12 @@ interface API {
     @POST("register")
     @FormUrlEncoded
     suspend fun register(@Field("username") username: String, @Field("password") password: String): Any
+
+
+
+    @GET("find_paginate")
+    suspend fun getUsers(@Query("page") page: Int, @Query("per_page") per_page: Int): List<User>
+
 
     @GET("/")
     suspend fun check0(): String

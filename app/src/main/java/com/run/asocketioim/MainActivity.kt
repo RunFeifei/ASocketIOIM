@@ -47,7 +47,15 @@ class MainActivity : BaseActivity<MainViewModel>() {
             initSocketIO()
         }
         disconnect.setOnClickListener {
-            socket.disconnect()
+            val message = Message(
+                text = "disconnect",
+                type = MessageType.MESSAGE_BROADCAST,
+                room_from = getUser().room_private,
+                room_to = getUser().room_private,
+                uid_from = getUser().id,
+                uid_to = getUser().id
+            )
+            socket.emit("on_disconnect", message.toJSONObject())
         }
         text.setOnClickListener {
             val message = Message(
@@ -73,6 +81,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
         onSocket()
     }
 
+
     private fun onSocket() {
         socket.on(Socket.EVENT_CONNECT, Emitter.Listener {
             toast("连接成功")
@@ -87,8 +96,17 @@ class MainActivity : BaseActivity<MainViewModel>() {
         socket.on(Socket.EVENT_CONNECT_ERROR, Emitter.Listener {
             toast("链接错误")
         })
+        socket.on("do_disconnect", Emitter.Listener {
+            Log.e("TAG-->EVENT_DISCONNECT", "${it[0]}")
+            val message = Gson().fromJson(it[0].toString(), Message::class.java)
+            val isSelf = getUser().id == message.uid_from
+            if (isSelf) {
+                toast("自己的链接断了")
+                socket.disconnect()
+            }
+        })
         socket.on(Socket.EVENT_DISCONNECT, Emitter.Listener {
-            toast("链接断了")
+            toast("EVENT_DISCONNECT")
         })
         socket.on("heart_beat", Emitter.Listener {
             Log.e("TAG-->", "HeartBeat")

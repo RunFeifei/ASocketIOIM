@@ -11,7 +11,8 @@ class User : Serializable {
     internal var access_token: String = ""
     internal var refresh_token: String = ""
     internal var room_private: String = ""
-    internal var user_id: Long = 0
+    internal var id: Long = 0
+    internal var time_register: Long = 0
     internal var username: String = ""
 
     override fun toString(): String {

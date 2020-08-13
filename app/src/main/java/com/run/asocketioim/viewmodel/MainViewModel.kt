@@ -50,5 +50,21 @@ class MainViewModel : BaseViewModel() {
         }
     }
 
+    fun getUsers(page: Int, per_page: Int) {
+        apiDSL<List<User>> {
+            onRequest {
+                service.getUsers(page, per_page)
+            }
+            onResponse {
+                Log.e("TAG-->", it.toString())
+                showToast("注册成功")
+            }
+            onError {
+                showToast("注册失败")
+                false
+            }
+        }
+    }
+
 
 }
