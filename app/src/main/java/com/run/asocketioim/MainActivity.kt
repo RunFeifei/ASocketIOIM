@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.WindowManager
 import android.widget.Toast
 import com.github.nkzawa.emitter.Emitter
 import com.github.nkzawa.socketio.client.IO
@@ -35,8 +36,16 @@ class MainActivity : BaseActivity<MainViewModel>() {
     }
 
     override fun initPage(savedInstanceState: Bundle?) {
-        val name = getRandomText(5)
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+        )
+        var name = getRandomText(5)
         edittext.text = "当前用户为${name}"
+        edittext.setOnClickListener {
+            name = getRandomText(5)
+            edittext.text = "当前用户为${name}"
+        }
         register.setOnClickListener {
             viewModel.register(name, "aabc")
         }
@@ -121,7 +130,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
             if (isSelf) {
                 toast("成功加入自己的房间")
             } else {
-                toast("${getUser().access_token}进来了")
+                toast("${getUser().id}进来了")
             }
         })
         socket.on("disconnect_broadcast", Emitter.Listener {
