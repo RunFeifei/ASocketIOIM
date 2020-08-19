@@ -10,17 +10,26 @@ interface API {
 
     @POST("login")
     @FormUrlEncoded
-    suspend fun login(@Field("username") username: String, @Field("password") password: String): User
+    suspend fun login(
+        @Field("username") username: String,
+        @Field("password") password: String
+    ): User
 
 
     @POST("register")
     @FormUrlEncoded
-    suspend fun register(@Field("username") username: String, @Field("password") password: String): Any
+    suspend fun register(
+        @Field("username") username: String,
+        @Field("password") password: String
+    ): Any
 
 
-
-    @GET("find_paginate")
+    @GET("users_paginate")
     suspend fun getUsers(@Query("page") page: Int, @Query("per_page") per_page: Int): List<User>
+
+
+    @GET("online_users")
+    suspend fun getOnlineUsers(): List<User>
 
 
     @GET("/")

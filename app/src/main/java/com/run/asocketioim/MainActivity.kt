@@ -67,6 +67,12 @@ class MainActivity : BaseActivity<MainViewModel>() {
             )
             socket.emit(Socket.EVENT_MESSAGE, message.toJSONObject())
         }
+        getUsers.setOnClickListener {
+            viewModel.getUsers(1,10)
+        }
+        getOnlineUsers.setOnClickListener {
+            viewModel.getOnlineUsers()
+        }
 
     }
 

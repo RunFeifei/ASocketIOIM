@@ -1,6 +1,7 @@
 package com.run.asocketioim.viewmodel
 
 import android.util.Log
+import com.google.gson.Gson
 import com.run.asocketioim.base.BaseViewModel
 import com.run.asocketioim.bean.User
 import com.run.asocketioim.net.API
@@ -26,6 +27,7 @@ class MainViewModel : BaseViewModel() {
                 showToast("登录成功")
                 Common.user = it
                 APPsp.user = it
+                Request.putHead("Authorization", " Bearer ${it.refresh_token}")
             }
             onError {
                 showToast("登录失败")
@@ -56,11 +58,25 @@ class MainViewModel : BaseViewModel() {
                 service.getUsers(page, per_page)
             }
             onResponse {
-                Log.e("TAG-->", it.toString())
-                showToast("注册成功")
+                Log.e("TAG-->", Gson().toJson(it))
             }
             onError {
-                showToast("注册失败")
+                showToast("getUsers失败")
+                false
+            }
+        }
+    }
+
+    fun getOnlineUsers() {
+        apiDSL<List<User>> {
+            onRequest {
+                service.getOnlineUsers()
+            }
+            onResponse {
+                Log.e("TAG-->", Gson().toJson(it))
+            }
+            onError {
+                showToast("getUsers失败")
                 false
             }
         }
