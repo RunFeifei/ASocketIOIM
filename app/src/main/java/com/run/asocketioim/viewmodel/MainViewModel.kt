@@ -67,20 +67,4 @@ class MainViewModel : BaseViewModel() {
         }
     }
 
-    fun getOnlineUsers() {
-        apiDSL<List<User>> {
-            onRequest {
-                service.getOnlineUsers()
-            }
-            onResponse {
-                Log.e("TAG-->", Gson().toJson(it))
-            }
-            onError {
-                showToast("getUsers失败")
-                false
-            }
-        }
-    }
-
-
 }

@@ -24,6 +24,10 @@ android {
         }
     }
 
+    androidExtensions {
+        experimental = true
+    }
+
 }
 
 dependencies {
@@ -40,6 +44,7 @@ dependencies {
 
     implementation 'com.github.forJrking:Preferences:1.0.5' // 必须
     implementation project(':im')
+    implementation 'com.github.ssseasonnn:Bracer:1.0.3'
 
 
 }

@@ -19,4 +19,5 @@ class User : Serializable {
         return Gson().toJson(this)
     }
 
+
 }

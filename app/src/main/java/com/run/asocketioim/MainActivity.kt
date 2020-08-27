@@ -12,12 +12,14 @@ import com.github.nkzawa.socketio.client.Socket
 import com.google.gson.Gson
 import com.run.asocketioim.base.BaseActivity
 import com.run.asocketioim.bean.Message
+import com.run.asocketioim.ui.OnlineUsersActivity
 import com.run.asocketioim.viewmodel.MainViewModel
 import com.run.asocketioim.widget.Common.getUser
 import com.run.asocketioim.widget.LOCAL_IP
 import com.run.asocketioim.widget.MessageType
 import com.run.asocketioim.widget.getRandomText
 import kotlinx.android.synthetic.main.activity_main.*
+import zlc.season.bracer.start
 
 
 class MainActivity : BaseActivity<MainViewModel>() {
@@ -68,10 +70,11 @@ class MainActivity : BaseActivity<MainViewModel>() {
             socket.emit(Socket.EVENT_MESSAGE, message.toJSONObject())
         }
         getUsers.setOnClickListener {
-            viewModel.getUsers(1,10)
+            viewModel.getUsers(1, 10)
         }
         getOnlineUsers.setOnClickListener {
-            viewModel.getOnlineUsers()
+//            viewModel.getOnlineUsers()
+            OnlineUsersActivity().start(this)
         }
 
     }
