@@ -1,3 +1,4 @@
+include ':input'
 rootProject.name='ASocketIOIM'
 include ':app'
 include ':im'

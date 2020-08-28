@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootLay"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -13,25 +12,6 @@
         android:background="#f0000f"
         android:text="TEST"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <com.vanniktech.emoji.EmojiEditText
-        android:id="@+id/emojiEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#000000"
-        android:imeOptions="actionSend"
-        android:inputType="textCapSentences|textMultiLine"
-        android:maxLines="3"
-        app:layout_constraintTop_toBottomOf="@id/textBtn"
-        tools:background="#00ff00"
-        />
-
-    <com.vanniktech.emoji.EmojiView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        tools:background="#00ffff"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/emojiEditText" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,6 @@ import android.os.Bundle
 import com.run.asocketioim.R
 import com.run.asocketioim.base.BaseActivity
 import com.run.asocketioim.base.BaseViewModel
-import com.vanniktech.emoji.EmojiPopup
 import kotlinx.android.synthetic.main.activity_chat_private.*
 
 
