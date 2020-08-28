@@ -1,7 +1,6 @@
 package com.run.asocketioim.ui
 
 import android.os.Bundle
-import android.view.WindowManager
 import com.run.asocketioim.R
 import com.run.asocketioim.base.BaseActivity
 import com.run.asocketioim.viewmodel.OnlineUserItem
@@ -27,10 +26,6 @@ class OnlineUsersActivity : BaseActivity<OnlineUsersViewModel>() {
     }
 
     override fun initPage(savedInstanceState: Bundle?) {
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-        )
         listView.linear(viewModel.dataSource)
         {
             renderItem<OnlineUserItem> {

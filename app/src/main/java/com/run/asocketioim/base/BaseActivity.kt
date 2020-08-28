@@ -3,6 +3,7 @@ package com.run.asocketioim.base
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -19,6 +20,10 @@ abstract class BaseActivity<T : BaseViewModel> : AppCompatActivity(), IBaseView 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutId())
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+        )
         viewModel = initViewModel()
         progressDialog = initProgressDialog()
         viewModel.apiLoading.observe(this, Observer<Boolean> {

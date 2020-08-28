@@ -5,6 +5,8 @@ import com.forjrking.preferences.kt.PreferenceHolder
 import com.forjrking.preferences.serialize.GsonSerializer
 import com.google.gson.Gson
 import com.run.asocketioim.widget.LOCAL_IP
+import com.run.im.IM
+import com.run.im.input.IMInput
 import com.uestc.request.handler.Request
 import org.litepal.LitePalApplication
 
@@ -18,6 +20,8 @@ class App : LitePalApplication() {
         super.onCreate()
         initRetrofit()
         initSP()
+        IM.context = getApp()
+        IMInput.context = getApp()
     }
 
     private fun initRetrofit() {

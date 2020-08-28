@@ -38,10 +38,6 @@ class MainActivity : BaseActivity<MainViewModel>() {
     }
 
     override fun initPage(savedInstanceState: Bundle?) {
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-        )
         var name = getRandomText(5)
         edittext.text = "当前用户为${name}"
         edittext.setOnClickListener {
