@@ -73,7 +73,6 @@ class MainActivity : BaseActivity<MainViewModel>() {
             viewModel.getUsers(1, 10)
         }
         getOnlineUsers.setOnClickListener {
-//            viewModel.getOnlineUsers()
             OnlineUsersActivity().start(this)
         }
 

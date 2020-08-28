@@ -39,5 +39,15 @@ class OnlineUsersViewModel : BaseViewModel() {
 }
 
 class OnlineUserItem(val data: User) : YashaItem
-class OnlineUsersDataSource : YashaDataSource()
+class OnlineUsersDataSource : YashaDataSource() {
+    override suspend fun loadInitial(): List<OnlineUserItem>? {
+        val list = mutableListOf<OnlineUserItem>()
+        val user = User()
+        user.username = "123"
+        val item = OnlineUserItem(user)
+        list.add(item)
+        return list
+
+    }
+}
 

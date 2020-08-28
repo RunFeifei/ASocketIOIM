@@ -8,6 +8,7 @@ import com.run.asocketioim.viewmodel.OnlineUserItem
 import com.run.asocketioim.viewmodel.OnlineUsersViewModel
 import kotlinx.android.synthetic.main.activity_users.*
 import kotlinx.android.synthetic.main.item_user.*
+import zlc.season.bracer.start
 import zlc.season.yasha.linear
 
 
@@ -36,6 +37,9 @@ class OnlineUsersActivity : BaseActivity<OnlineUsersViewModel>() {
                 res(R.layout.item_user)
                 onBind {
                     textView.text = data.data.username
+                    containerView.setOnClickListener {
+                        PrivateChatActivity().start(this@OnlineUsersActivity)
+                    }
                 }
             }
         }
