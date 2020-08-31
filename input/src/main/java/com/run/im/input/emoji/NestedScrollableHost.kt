@@ -1,5 +1,5 @@
 
-package com.run.im.input
+package com.run.im.input.emoji
 
 import android.content.Context
 import android.util.AttributeSet

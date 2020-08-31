@@ -1,4 +1,4 @@
-package com.run.im.input
+package com.run.im.input.emoji
 
 import android.content.Context
 import android.util.AttributeSet
@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.run.im.input.R
 
 /**
  * Created by PengFeifei on 2020/8/28.
@@ -31,7 +32,7 @@ class EmotionLayout @JvmOverloads constructor(context: Context, attrs: Attribute
 }
 
 
-class RvAdapter() : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
+class EmotionListAdapter() : RecyclerView.Adapter<EmotionListAdapter.ViewHolder>() {
     override fun getItemCount(): Int {
         return 400
     }
@@ -74,7 +75,7 @@ class EmotionViewpagerAdapter(val context: Context) : RecyclerView.Adapter<Emoti
 
     private fun RecyclerView.setUpRecyclerView() {
         layoutManager = GridLayoutManager(context, 4, RecyclerView.VERTICAL, false)
-        adapter = RvAdapter()
+        adapter = EmotionListAdapter()
     }
 
 }

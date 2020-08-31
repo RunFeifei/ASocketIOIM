@@ -1,4 +1,4 @@
-package com.run.im.input
+package com.run.im.input.emoji
 
 import zlc.season.yasha.YashaDataSource
 import zlc.season.yasha.YashaItem
