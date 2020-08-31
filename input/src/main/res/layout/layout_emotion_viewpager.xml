@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.run.im.input.NestedScrollableHost xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="8dp">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/listView"
+    <com.run.im.input.NestedScrollableHost
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF" />
-</com.run.im.input.NestedScrollableHost>
+        android:layout_marginTop="8dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.run.im.input.NestedScrollableHost>
+</LinearLayout>

@@ -2,10 +2,12 @@ package com.run.im.input
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
@@ -26,8 +28,32 @@ class EmotionLayout @JvmOverloads constructor(context: Context, attrs: Attribute
     private fun initViewPager() {
         emotionViewPager.adapter = EmotionViewpagerAdapter(context)
     }
-
 }
+
+
+class RvAdapter() : RecyclerView.Adapter<RvAdapter.ViewHolder>() {
+    override fun getItemCount(): Int {
+        return 400
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val tv = TextView(parent.context)
+        tv.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        tv.textSize = 20f
+        tv.gravity = Gravity.CENTER
+        tv.setPadding(20, 55, 20, 55)
+        return ViewHolder(tv)
+    }
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        with(holder) {
+            tv.text = tv.context.getString(R.string.item_position, adapterPosition)
+        }
+    }
+
+    class ViewHolder(val tv: TextView) : RecyclerView.ViewHolder(tv)
+}
+
 
 class EmotionViewpagerAdapter(val context: Context) : RecyclerView.Adapter<EmotionViewpagerViewHolder>() {
 
@@ -47,13 +73,13 @@ class EmotionViewpagerAdapter(val context: Context) : RecyclerView.Adapter<Emoti
     }
 
     private fun RecyclerView.setUpRecyclerView() {
-        layoutManager = GridLayoutManager(context, 4)
-        adapter = ParallelNestedScrollingActivity.RvAdapter(RecyclerView.HORIZONTAL)
-
-
+        layoutManager = GridLayoutManager(context, 4, RecyclerView.VERTICAL, false)
+        adapter = RvAdapter()
     }
+
 }
 
 class EmotionViewpagerViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
     val listView: RecyclerView = itemView.findViewById(R.id.listView)
 }
+
