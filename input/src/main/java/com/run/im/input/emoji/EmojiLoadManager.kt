@@ -9,8 +9,7 @@ import com.run.im.input.Config.Companion.EMOT_DIR
 import com.run.im.input.IMInput
 import com.run.im.input.emoji.EmojiLoadManager.EmojiEntry.Companion.EmptyEmojiEntry
 import com.run.im.input.getBitmapFromAsset
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 import org.xml.sax.Attributes
 import org.xml.sax.helpers.DefaultHandler
 
@@ -64,33 +63,35 @@ class EmojiLoadManager {
             return listEmoji.size / EMOJI_PER_PAGE
         }
 
-    }
-
-
-    /**
-     * launch(Dispatchers.Main) {
-     * val image = loadEmotion()
-     * avatarIv.setImageBitmap(image)
-     * }
-     */
-    suspend fun loadEmotion(context: Context?, index: Int): BitmapDrawable? {
-        return withContext(Dispatchers.IO) {
-            context ?: return@withContext null
-            val entry = if (index < 0 || index >= listEmoji.size) null else listEmoji[index]
-            entry ?: return@withContext null
-            if (entry.text.isEmpty()) {
-                return@withContext null
-            }
-            val cache = drawableCache.get(entry.assetPath)
-            if (cache != null) {
-                cache
-            } else {
-                val drawable = getBitmapFromAsset(context, entry.assetPath)
-                drawableCache.put(entry.assetPath, drawable)
-                drawable
+        /**
+         * launch(Dispatchers.Main) {
+         * val image = loadEmotion()
+         * avatarIv.setImageBitmap(image)
+         * }
+         */
+        suspend fun loadEmotion(context: Context?, index: Int): BitmapDrawable? {
+            return withContext(Dispatchers.IO) {
+                context ?: return@withContext null
+                val entry = if (index < 0 || index >= listEmoji.size) null else listEmoji[index]
+                entry ?: return@withContext null
+                if (entry.text.isEmpty()) {
+                    return@withContext null
+                }
+                val cache = drawableCache.get(entry.assetPath)
+                if (cache != null) {
+                    cache
+                } else {
+                    val drawable = getBitmapFromAsset(context, entry.assetPath)
+                    drawableCache.put(entry.assetPath, drawable)
+                    drawable
+                }
             }
         }
+
     }
+
+
+
 
 
     class DefaultEmojiLoader : DefaultHandler() {

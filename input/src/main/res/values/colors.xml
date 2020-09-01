@@ -39,4 +39,9 @@
     <color name="purple_500">#6200EE</color>
     <color name="teal_200">#03DAC5</color>
     <color name="teal_300">#4DB6AC</color>
+
+    <color name="line">#ccc</color>
+    <color name="white">#fff</color>
+    <color name="gray">#D9D9D9</color>
+    <color name="gray10">#EBEFEF</color>
 </resources>
