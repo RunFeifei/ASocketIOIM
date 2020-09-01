@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.run.im.input.Config.Companion.EMOJI_PER_PAGE
 import com.run.im.input.R
 
 /**
@@ -66,7 +67,7 @@ class EmotionViewpagerAdapter(val context: Context) : RecyclerView.Adapter<Emoti
     }
 
     override fun getItemCount(): Int {
-        return 3
+        return EmojiLoadManager.getDisplayCount() / EMOJI_PER_PAGE
     }
 
     override fun onBindViewHolder(holder: EmotionViewpagerViewHolder, position: Int) {

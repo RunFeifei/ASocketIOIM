@@ -14,6 +14,8 @@ class Config {
         val STICKER_COLUMNS = 4
         val STICKER_ROWS = 2
         val STICKER_PER_PAGE = STICKER_COLUMNS * STICKER_ROWS
+
+        val EMOT_DIR = "emoji/"
     }
 
 
