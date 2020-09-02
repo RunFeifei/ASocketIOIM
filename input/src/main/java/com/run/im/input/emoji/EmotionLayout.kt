@@ -106,10 +106,6 @@ class EmotionListAdapter(val gridViewIndex: Int, val layoutWidth: Int, val layou
         }
     }
 
-    override fun getItemViewType(position: Int): Int {
-        return if (position == itemCount - 1) 1 else 0
-    }
-
     class ViewHolder(val layout: RelativeLayout) : RecyclerView.ViewHolder(layout)
 }
 
@@ -132,7 +128,7 @@ class EmotionViewpagerAdapter(val context: Context, val layoutWidth: Int, val la
     }
 
     private fun RecyclerView.setUpRecyclerView(position: Int) {
-        layoutManager = GridLayoutManager(context, 4, RecyclerView.VERTICAL, false)
+        layoutManager = GridLayoutManager(context, EMOJI_COLUMNS, RecyclerView.VERTICAL, false)
         adapter = EmotionListAdapter(position, layoutWidth, layoutHeight)
     }
 

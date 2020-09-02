@@ -11,12 +11,19 @@
         android:layout_height="100dp"
         android:background="#f0000f"
         android:text="TEST"
+        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.run.im.input.emoji.EmotionLayout
+<!--    <com.run.im.input.emoji.EmotionLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/textBtn" />-->
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listView"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textBtn" />
+        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
