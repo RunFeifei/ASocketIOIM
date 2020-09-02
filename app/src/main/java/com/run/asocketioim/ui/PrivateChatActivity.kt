@@ -3,16 +3,12 @@ package com.run.asocketioim.ui
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.viewModelScope
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.run.asocketioim.R
 import com.run.asocketioim.base.BaseActivity
 import com.run.asocketioim.base.BaseViewModel
-import com.run.im.input.Config
-import com.run.im.input.emoji.EmotionListAdapter
-import com.run.im.input.screenHeight
-import com.run.im.input.screenWidth
+import com.run.im.input.emoji.OnEmojiClick
 import kotlinx.android.synthetic.main.activity_chat_private.*
 import kotlinx.coroutines.launch
 import zlc.season.bracer.start
@@ -34,28 +30,22 @@ class PrivateChatActivity : BaseActivity<BaseViewModel>() {
 
     override fun initPage(savedInstanceState: Bundle?) {
         viewModel.viewModelScope.launch {
-            val result = request(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
-            if (result.isGranted) {
-                //Now we have storage permission.
-            } else {
-                if (result.shouldShowRational) {
-                    //Show permission rational
-                }
-                if (result.alwaysDenied) {
-                    //User always denied our permission
-                }
-            }
+            request(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
         }
 
         textBtn.setOnClickListener {
             PrivateChatActivity().start(this)
         }
+        emotion.onEmojiClick = object : OnEmojiClick {
+            override fun onEmojiSelected(emotionPath: String?, view: View?) {
+                showToast("onEmojiSelected")
+            }
 
-    }
+            override fun onEmojiDelete(View: View?) {
+                showToast("onEmojiDelete")
+            }
+        }
 
-    private fun RecyclerView.setUpRecyclerView(position: Int) {
-        layoutManager = GridLayoutManager(context, Config.EMOJI_COLUMNS, RecyclerView.VERTICAL, false)
-        adapter = EmotionListAdapter(position, screenWidth(), screenHeight())
     }
 
 

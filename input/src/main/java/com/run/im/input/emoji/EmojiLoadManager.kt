@@ -63,7 +63,7 @@ class EmojiLoadManager {
             if (entry.text.isEmpty() || entry.assetPath.isEmpty()) {
                 return null
             }
-            return entry.assetPath
+            return "file:///android_asset/${entry.assetPath}"
         }
 
         private fun getListEmoji(context: Context): List<EmojiEntry> {
