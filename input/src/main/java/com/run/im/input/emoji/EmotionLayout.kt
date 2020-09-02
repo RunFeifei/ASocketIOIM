@@ -13,13 +13,12 @@ import android.widget.RelativeLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.run.im.input.Config.Companion.EMOJI_COLUMNS
 import com.run.im.input.Config.Companion.EMOJI_PER_PAGE
 import com.run.im.input.Config.Companion.EMOJI_ROWS
 import com.run.im.input.R
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * Created by PengFeifei on 2020/8/28.
@@ -100,10 +99,14 @@ class EmotionListAdapter(val gridViewIndex: Int, val layoutWidth: Int, val layou
             }
             val index = gridViewIndex * EMOJI_PER_PAGE + position
             if (index >= EmojiLoadManager.getDisplayCount()) {
-                throw java.lang.IllegalStateException("ndex >= EmojiLoadManager.getDisplayCount()")
+                throw java.lang.IllegalStateException("index >= EmojiLoadManager.getDisplayCount()")
             }
-            GlobalScope.launch(Dispatchers.Main) {
-                background = EmojiLoadManager.loadEmotion(context, index)
+            EmojiLoadManager.getEmotionUrl(index)?.let {
+                val path ="file:///android_asset/$it"
+                Glide.with(context)
+                    .load(path)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(this)
             }
         }
     }

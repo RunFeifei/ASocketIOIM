@@ -91,6 +91,15 @@ class EmojiLoadManager {
             }
         }
 
+        fun getEmotionUrl(index: Int): String? {
+            val entry = if (index < 0 || index >= listEmoji.size) null else listEmoji[index]
+            entry ?: return null
+            if (entry.text.isEmpty() || entry.assetPath.isEmpty()) {
+                return null
+            }
+            return entry.assetPath
+        }
+
         private fun getListEmoji(context: Context): List<EmojiEntry> {
             val assetPath = "${EMOT_DIR}emoji.json"
             val bufferSize = 1024
