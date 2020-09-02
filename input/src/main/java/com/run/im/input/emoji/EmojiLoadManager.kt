@@ -1,16 +1,11 @@
 package com.run.im.input.emoji
 
 import android.content.Context
-import android.graphics.drawable.BitmapDrawable
-import android.util.LruCache
 import com.google.gson.Gson
 import com.run.im.input.Config.Companion.EMOJI_PER_PAGE
 import com.run.im.input.Config.Companion.EMOT_DIR
 import com.run.im.input.IMInput
 import com.run.im.input.emoji.EmojiEntry.Companion.EmptyEmojiEntry
-import com.run.im.input.getBitmapFromAsset
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.nio.charset.Charset
@@ -24,10 +19,6 @@ class EmojiLoadManager {
 
     companion object {
         private lateinit var listEmoji: ArrayList<EmojiEntry>
-        private val drawableCache by lazy {
-            DrawableCache(1024)
-        }
-
         fun getDisplayCount(): Int {
             return listEmoji.size
         }
@@ -64,31 +55,6 @@ class EmojiLoadManager {
                 throw IllegalStateException("按道理来说这里应该是整除")
             }
             return listEmoji.size / EMOJI_PER_PAGE
-        }
-
-        /**
-         * launch(Dispatchers.Main) {
-         * val image = loadEmotion()
-         * avatarIv.setImageBitmap(image)
-         * }
-         */
-        suspend fun loadEmotion(context: Context?, index: Int): BitmapDrawable? {
-            return withContext(Dispatchers.IO) {
-                context ?: return@withContext null
-                val entry = if (index < 0 || index >= listEmoji.size) null else listEmoji[index]
-                entry ?: return@withContext null
-                if (entry.text.isEmpty()) {
-                    return@withContext null
-                }
-                val cache = drawableCache.get(entry.assetPath)
-                if (cache != null) {
-                    cache
-                } else {
-                    val drawable = getBitmapFromAsset(context, entry.assetPath)
-                    drawableCache.put(entry.assetPath, drawable)
-                    drawable
-                }
-            }
         }
 
         fun getEmotionUrl(index: Int): String? {
@@ -149,17 +115,4 @@ class EmojiLoadManager {
         }
 
     }
-
-
-    class DrawableCache(size: Int) : LruCache<String, BitmapDrawable?>(size) {
-        override fun entryRemoved(evicted: Boolean, key: String?, oldValue: BitmapDrawable?, newValue: BitmapDrawable?) {
-            if (oldValue == null || newValue == null) {
-                return
-            }
-            if (oldValue != newValue) {
-                oldValue.bitmap?.recycle()
-            }
-        }
-    }
-
 }
