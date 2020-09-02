@@ -54,9 +54,6 @@ class EmotionListAdapter(val gridViewIndex: Int, layoutWidth: Int, layoutHeight:
         with(holder.layout.getChildAt(0) as ImageView) {
             val isLast = position == itemCount - 1
             val index = gridViewIndex * Config.EMOJI_PER_PAGE + position
-            if (index >= EmojiLoadManager.getDisplayCount()) {
-                throw java.lang.IllegalStateException("index >= EmojiLoadManager.getDisplayCount()")
-            }
             val emotionPath = EmojiLoadManager.getEmotionUrl(index)
             //click
             setOnClickListener(object : View.OnClickListener {
