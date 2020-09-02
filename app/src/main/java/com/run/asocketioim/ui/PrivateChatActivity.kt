@@ -11,6 +11,7 @@ import com.run.im.input.emoji.EmotionListAdapter
 import com.run.im.input.screenHeight
 import com.run.im.input.screenWidth
 import kotlinx.android.synthetic.main.activity_chat_private.*
+import zlc.season.bracer.start
 
 
 class PrivateChatActivity : BaseActivity<BaseViewModel>() {
@@ -27,7 +28,9 @@ class PrivateChatActivity : BaseActivity<BaseViewModel>() {
     }
 
     override fun initPage(savedInstanceState: Bundle?) {
-        listView.setUpRecyclerView(1)
+        textBtn.setOnClickListener {
+            PrivateChatActivity().start(this)
+        }
 
     }
 

@@ -37,7 +37,9 @@ class EmotionLayout @JvmOverloads constructor(context: Context, attrs: Attribute
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
-        initViewPager()
+        post {
+            initViewPager()
+        }
     }
 
     private fun initViewPager() {
