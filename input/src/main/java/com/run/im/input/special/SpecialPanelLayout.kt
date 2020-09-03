@@ -24,8 +24,18 @@ private val List_Special_Items = arrayListOf(
     Pair(R.string.location, R.mipmap.ic_func_location)
 )
 
+interface OnSpecialItemClick {
+    fun onSpecialItemClick(type: SpecialItemType)
+}
+
+enum class SpecialItemType {
+    PICTURE, VIDEO, CAMERA, FILE, GPS
+}
+
 
 class SpecialPanelLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : RecyclerView(context, attrs, defStyle) {
+
+    private val listAdapter = SpecialPanelAdapter(List_Special_Items)
 
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
@@ -38,22 +48,38 @@ class SpecialPanelLayout @JvmOverloads constructor(context: Context, attrs: Attr
 
     private fun init() {
         layoutManager = GridLayoutManager(context, Config.SPECIAL_COLUMNS, VERTICAL, false)
-        adapter = SpecialPanelAdapter(List_Special_Items)
+        adapter = listAdapter
     }
+
+    fun setClick(click: OnSpecialItemClick) {
+        listAdapter.setClick(click)
+    }
+
+
 }
 
 class SpecialPanelAdapter(val list: List<Pair<Int, Int>>) : RecyclerView.Adapter<SpecialPanelAdapter.ViewHolder>() {
+
+    private var click: OnSpecialItemClick? = null
+
+    fun setClick(click: OnSpecialItemClick) {
+        this.click = click
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_special, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.apply {
+        with(holder) {
             imgItem.setImageResource(list[position].second)
             textTip.setText(list[position].first)
+            containerView.setOnClickListener {
+                this@SpecialPanelAdapter.click?.onSpecialItemClick(SpecialItemType.values()[position])
+            }
         }
     }
+
 
     override fun getItemCount(): Int {
         return list.size

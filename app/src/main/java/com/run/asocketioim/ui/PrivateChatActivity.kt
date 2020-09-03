@@ -7,9 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.run.asocketioim.R
 import com.run.asocketioim.base.BaseActivity
 import com.run.asocketioim.base.BaseViewModel
+import com.run.im.input.special.OnSpecialItemClick
+import com.run.im.input.special.SpecialItemType
 import kotlinx.android.synthetic.main.activity_chat_private.*
 import kotlinx.coroutines.launch
-import zlc.season.bracer.start
 import zlc.season.permissionx.request
 
 
@@ -31,10 +32,11 @@ class PrivateChatActivity : BaseActivity<BaseViewModel>() {
             request(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
         }
 
-        textBtn.setOnClickListener {
-            PrivateChatActivity().start(this)
-        }
-
+        specialLayout.setClick(object : OnSpecialItemClick {
+            override fun onSpecialItemClick(type: SpecialItemType) {
+                showToast(type.toString())
+            }
+        })
     }
 
 
