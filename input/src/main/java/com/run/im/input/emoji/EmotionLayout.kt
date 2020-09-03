@@ -2,6 +2,7 @@ package com.run.im.input.emoji
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,10 +29,13 @@ class EmotionLayout @JvmOverloads constructor(context: Context, attrs: Attribute
         emotionViewPager = findViewById(R.id.emotionViewPager)
     }
 
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        post {
-            initViewPager()
+    override fun onVisibilityChanged(changedView: View, visibility: Int) {
+        super.onVisibilityChanged(changedView, visibility)
+        (visibility == View.VISIBLE).let {
+            Log.e("onVisibilityChanged", visibility.toString())
+            post {
+                initViewPager()
+            }
         }
     }
 

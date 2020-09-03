@@ -12,7 +12,8 @@
         app:layout_constraintVertical_weight="0"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="#00ff00" />
+        tools:background="#00ff00"
+        />
 
     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
         android:id="@+id/indicator"

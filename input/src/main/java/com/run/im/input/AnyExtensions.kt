@@ -71,7 +71,6 @@ val Float.px: Int
     get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 
 
-
 /**
  * 获取当前屏幕显示区域的宽度
  */
@@ -89,7 +88,7 @@ fun Context.displayScreenHeight(): Int {
 
 private fun Context.getDisplayMetrics(): DisplayMetrics {
     when {
-        this is Application -> return  this.resources.displayMetrics
+        this is Application -> return this.resources.displayMetrics
         this is Activity -> {
             val windowManager = this.windowManager
             val d = windowManager.defaultDisplay
@@ -183,3 +182,49 @@ fun Context.statusBarHeight(): Int {
     }
     return height
 }
+
+fun View.flipVisibility(invisible: Int = View.GONE): Boolean {
+    if (visibility == View.VISIBLE) {
+        visibility = invisible
+        return false
+    }
+    visibility = View.VISIBLE
+    return true
+
+}
+
+fun View?.visible() {
+    this?.let {
+        visibility = View.VISIBLE
+    }
+}
+
+fun View?.invisible() {
+    this?.let {
+        visibility = View.INVISIBLE
+    }
+}
+
+fun View?.gone() {
+    this?.let {
+        visibility = View.GONE
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
