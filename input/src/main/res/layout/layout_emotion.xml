@@ -15,13 +15,14 @@
         android:background="#00ff00" />
 
     <com.tbuonomo.viewpagerdotsindicator.DotsIndicator
-        android:id="@+id/dots_indicator"
+        android:id="@+id/indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:dotsColor="#f0000f"
         app:dotsCornerRadius="8dp"
         app:dotsSize="16dp"
         app:dotsSpacing="4dp"
+        android:visibility="gone"
         app:dotsWidthFactor="2.5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/emotionViewPager"

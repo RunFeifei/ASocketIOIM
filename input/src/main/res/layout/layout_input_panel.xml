@@ -3,10 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    tools:background="#000000"
+    android:layout_height="wrap_content"
     android:animateLayoutChanges="true"
     android:background="#F8F8F8"
-    android:layout_height="match_parent">
+    android:focusableInTouchMode="true"
+    tools:background="#000000">
+
     <ImageView
         android:id="@+id/audioImageView"
         android:layout_width="35dp"
@@ -14,7 +16,96 @@
         android:layout_gravity="bottom"
         android:layout_margin="5dp"
         android:scaleType="centerInside"
-        android:src="@mipmap/ic_cheat_voice" />
+        android:src="@mipmap/ic_cheat_voice"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="#00f000" />
+
+    <ImageView
+        android:id="@+id/extImageView"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="5dp"
+        android:scaleType="centerInside"
+        android:src="@mipmap/ic_cheat_add"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="#0000f0" />
+
+    <ImageView
+        android:id="@+id/emotionImageView"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="5dp"
+        android:scaleType="centerInside"
+        android:src="@mipmap/ic_cheat_emo"
+        app:layout_constraintRight_toLeftOf="@id/extImageView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="#0000f0" />
+
+    <Button
+        android:id="@+id/sendButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="50dp"
+        android:layout_height="35dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/shape_session_btn_send"
+        android:gravity="center"
+        android:text="@string/send"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/emotionImageView"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="#f00000"
+        tools:visibility="visible" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:background="@drawable/shape_session_text_input"
+        android:maxLines="5"
+        android:minHeight="42dp"
+        android:textSize="16sp"
+        android:visibility="visible"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toRightOf="@id/audioImageView"
+        app:layout_constraintRight_toLeftOf="@id/emotionImageView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="#0000f0" />
+
+    <Button
+        android:id="@+id/audioButton"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:background="@drawable/shape_session_btn_voice_normal"
+        android:gravity="center"
+        android:text="@string/please_to_talk"
+        android:textColor="@color/gray1"
+        android:visibility="gone"
+        app:layout_constraintLeft_toRightOf="@id/audioImageView"
+        app:layout_constraintRight_toLeftOf="@id/emotionImageView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:background="#ffff00"
+        tools:visibility="visible" />
+
+    <com.run.im.input.emoji.EmotionLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_custom_keyboard_size"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editText"
+        app:layout_constraintVertical_bias="0.0"
+        tools:background="#f00000" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
