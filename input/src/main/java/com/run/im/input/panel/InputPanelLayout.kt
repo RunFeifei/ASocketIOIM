@@ -18,6 +18,7 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
 
     private var isAudioShow = false
     private var isEmojiShow = false
+    private var isSpecialShow = false
 
     override val containerView: View?
         get() = LayoutInflater.from(context).inflate(R.layout.layout_input_panel, this)
@@ -44,6 +45,13 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 showEmoji()
             }
         }
+        extImageView.setOnClickListener {
+            if (isSpecialShow) {
+                hideSpecial()
+            } else {
+                showSpecial()
+            }
+        }
     }
 
 
@@ -52,6 +60,7 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         editText.gone()
         audioImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
         hideEmoji()
+        hideSpecial()
         isAudioShow = true
     }
 
@@ -65,6 +74,7 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
     private fun showEmoji() {
         emotionLayout.visible()
         hideAudio()
+        hideSpecial()
         emotionImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
         isEmojiShow = true
     }
@@ -73,6 +83,18 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         emotionLayout.gone()
         emotionImageView.setImageResource(R.mipmap.ic_cheat_emo)
         isEmojiShow = false
+    }
+
+    private fun showSpecial() {
+        specialLayout.visible()
+        hideEmoji()
+        hideAudio()
+        isSpecialShow = true
+    }
+
+    private fun hideSpecial() {
+        specialLayout.gone()
+        isSpecialShow = false
     }
 
 

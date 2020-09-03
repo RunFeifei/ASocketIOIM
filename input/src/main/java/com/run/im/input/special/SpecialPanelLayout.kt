@@ -71,7 +71,7 @@ class SpecialPanelAdapter(val list: List<Pair<Int, Int>>) : RecyclerView.Adapter
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        with(holder) {
+       with(holder) {
             imgItem.setImageResource(list[position].second)
             textTip.setText(list[position].first)
             containerView.setOnClickListener {
