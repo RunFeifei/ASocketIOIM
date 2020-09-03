@@ -10,6 +10,9 @@ class Config {
         val EMOJI_ROWS = 3
         val EMOJI_PER_PAGE = EMOJI_COLUMNS * EMOJI_ROWS - 1 //最后一个是删除键
 
+        val SPECIAL_COLUMNS = 4//输入面板点击+
+
+
 
         val STICKER_COLUMNS = 4
         val STICKER_ROWS = 2

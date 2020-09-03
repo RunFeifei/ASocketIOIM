@@ -9,6 +9,7 @@
     android:focusableInTouchMode="true"
     tools:background="#000000">
 
+    <!--语音-->
     <ImageView
         android:id="@+id/audioImageView"
         android:layout_width="35dp"
@@ -21,6 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:background="#00f000" />
 
+    <!--加号-->
     <ImageView
         android:id="@+id/extImageView"
         android:layout_width="35dp"
@@ -32,7 +34,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:background="#0000f0" />
-
+    <!--表情-->
     <ImageView
         android:id="@+id/emotionImageView"
         android:layout_width="35dp"
@@ -45,6 +47,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:background="#0000f0" />
 
+    <!--发送-->
     <Button
         android:id="@+id/sendButton"
         style="?android:attr/borderlessButtonStyle"
@@ -80,6 +83,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:background="#0000f0" />
 
+    <!--按住说话-->
     <Button
         android:id="@+id/audioButton"
         style="?android:attr/borderlessButtonStyle"
@@ -100,12 +104,23 @@
         android:id="@+id/emotionLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_custom_keyboard_size"
+        android:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editText"
+        tools:background="#f00000"
+        tools:visibility="visible" />
+
+    <com.run.im.input.special.SpecialPanelLayout
+        android:id="@+id/specialLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_custom_keyboard_size"
         android:visibility="gone"
-        tools:visibility="visible"
-        tools:background="#f00000" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editText"
+        tools:background="#f00000"
+        tools:visibility="visible" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
