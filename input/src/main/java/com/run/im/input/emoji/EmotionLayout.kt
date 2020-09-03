@@ -31,7 +31,7 @@ class EmotionLayout @JvmOverloads constructor(context: Context, attrs: Attribute
 
     override fun onVisibilityChanged(changedView: View, visibility: Int) {
         super.onVisibilityChanged(changedView, visibility)
-        (visibility == View.VISIBLE).let {
+        if(visibility == View.VISIBLE) {
             Log.e("onVisibilityChanged", visibility.toString())
             post {
                 initViewPager()
