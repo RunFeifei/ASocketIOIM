@@ -7,6 +7,8 @@ import android.view.View
 import android.widget.FrameLayout
 import com.run.im.input.R
 import com.run.im.input.gone
+import com.run.im.input.keyboard.hideKeyboard
+import com.run.im.input.keyboard.showKeyboard
 import com.run.im.input.visible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.layout_input_panel.*
@@ -57,16 +59,17 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
 
     private fun showAudio() {
         audioButton.visible()
-        editText.gone()
+        hideEdit()
         audioImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
         hideEmoji()
         hideSpecial()
+        editText.hideKeyboard(context)
         isAudioShow = true
     }
 
     private fun hideAudio() {
         audioButton.gone()
-        editText.visible()
+        showEdit()
         audioImageView.setImageResource(R.mipmap.ic_cheat_voice)
         isAudioShow = false
     }
@@ -76,6 +79,7 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         hideAudio()
         hideSpecial()
         emotionImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
+        editText.hideKeyboard(context)
         isEmojiShow = true
     }
 
@@ -95,6 +99,18 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
     private fun hideSpecial() {
         specialLayout.gone()
         isSpecialShow = false
+    }
+
+    private fun showEdit() {
+        editText.visible()
+        editText.requestFocus()
+        editText.showKeyboard(context)
+    }
+
+    private fun hideEdit() {
+        editText.clearFocus()
+        editText.hideKeyboard(context)
+        editText.gone()
     }
 
 

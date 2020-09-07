@@ -55,7 +55,7 @@ class PrivateChatActivity : BaseActivity<PrivateChatViewModel>() {
                 res(R.layout.item_user)
                 onBind {
                     val position = onlineUsersViewModel.dataSource.getItems().indexOf(data)
-                    textView.text = "MSG-${position}"
+                    textView.text = "MSG-${position + 1}"
                     val colors = intArrayOf(Color.RED, Color.BLUE, Color.YELLOW)
                     containerView.setBackgroundColor(colors[position % 3])
                 }
