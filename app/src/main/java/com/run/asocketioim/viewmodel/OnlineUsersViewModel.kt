@@ -2,12 +2,14 @@ package com.run.asocketioim.viewmodel
 
 import android.util.Log
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.run.asocketioim.base.BaseViewModel
 import com.run.asocketioim.bean.User
 import com.run.asocketioim.net.API
 import com.uestc.request.handler.Request
 import zlc.season.yasha.YashaDataSource
 import zlc.season.yasha.YashaItem
+
 
 /**
  * Created by PengFeifei on 2020/8/26.
@@ -41,12 +43,18 @@ class OnlineUsersViewModel : BaseViewModel() {
 class OnlineUserItem(val data: User) : YashaItem
 class OnlineUsersDataSource : YashaDataSource() {
     override suspend fun loadInitial(): List<OnlineUserItem>? {
-        val list = mutableListOf<OnlineUserItem>()
-        val user = User()
-        user.username = "123"
-        val item = OnlineUserItem(user)
-        list.add(item)
-        return list
+        val json =
+            "[{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"}]"
+        val users: List<User> = Gson().fromJson(json, object : TypeToken<List<User?>?>() {}.type)
+        users.map {
+            OnlineUserItem(it)
+        }
+        return users.map {
+            OnlineUserItem(it)
+        }.apply {
+            //58
+            Log.e("OnlineUsersDataSource", "init Size--> $size")
+        }
 
     }
 }

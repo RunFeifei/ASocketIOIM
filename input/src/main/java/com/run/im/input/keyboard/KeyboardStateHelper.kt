@@ -21,7 +21,7 @@ import com.run.im.input.screenHeight
 
 val keyBoardState = MutableLiveData<Boolean?>()
 val keyBoardHeight = MutableLiveData<Int>().apply {
-    postValue(0)
+    postValue((IMInput.context.screenHeight() * 0.4f).toInt())
 }
 
 

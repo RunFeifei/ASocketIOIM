@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.WindowManager
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.github.nkzawa.emitter.Emitter
 import com.github.nkzawa.socketio.client.IO
 import com.github.nkzawa.socketio.client.Socket
@@ -27,7 +27,7 @@ class MainActivity : BaseActivity<MainViewModel>() {
     private lateinit var socket: Socket
 
     override fun initViewModel(): MainViewModel {
-        return MainViewModel()
+        return ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
     override fun layoutId(): Int {

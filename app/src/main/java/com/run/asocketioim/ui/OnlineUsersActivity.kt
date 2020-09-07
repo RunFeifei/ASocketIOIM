@@ -1,8 +1,10 @@
 package com.run.asocketioim.ui
 
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import com.run.asocketioim.R
 import com.run.asocketioim.base.BaseActivity
+import com.run.asocketioim.viewmodel.MainViewModel
 import com.run.asocketioim.viewmodel.OnlineUserItem
 import com.run.asocketioim.viewmodel.OnlineUsersViewModel
 import kotlinx.android.synthetic.main.activity_users.*
@@ -14,7 +16,7 @@ import zlc.season.yasha.linear
 class OnlineUsersActivity : BaseActivity<OnlineUsersViewModel>() {
 
     override fun initViewModel(): OnlineUsersViewModel {
-        return OnlineUsersViewModel()
+        return ViewModelProvider(this).get(OnlineUsersViewModel::class.java)
     }
 
     override fun layoutId(): Int {
