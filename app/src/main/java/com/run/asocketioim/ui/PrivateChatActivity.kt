@@ -15,7 +15,6 @@ import zlc.season.permissionx.request
 
 class PrivateChatActivity : BaseActivity<BaseViewModel>() {
 
-    private lateinit var softKeyboardStateHelper: SoftKeyboardStateHelper
 
     override fun initViewModel(): BaseViewModel {
         return BaseViewModel()
@@ -32,18 +31,7 @@ class PrivateChatActivity : BaseActivity<BaseViewModel>() {
         viewModel.viewModelScope.launch {
             request(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
         }
-
-        softKeyboardStateHelper = SoftKeyboardStateHelper(rootLay)
-        softKeyboardStateHelper.addSoftKeyboardStateListener(object :
-            SoftKeyboardStateHelper.SoftKeyboardStateListener {
-
-            override fun onSoftKeyboardOpened(keyboardHeight: Int) {
-                showToast("onSoftKeyboardOpened--${keyboardHeight}")
-            }
-
-            override fun onSoftKeyboardClosed() {
-            }
-        })
+        SoftKeyboardStateHelper(rootLay)
     }
 
 

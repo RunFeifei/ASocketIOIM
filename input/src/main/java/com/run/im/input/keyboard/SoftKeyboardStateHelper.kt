@@ -3,29 +3,25 @@ package com.run.im.input.keyboard
 import android.graphics.Rect
 import android.view.View
 import android.view.ViewTreeObserver
+import androidx.lifecycle.MutableLiveData
 import com.run.im.input.IMInput
 import com.run.im.input.screenHeight
-import java.util.*
 
 /**
  * @author  FreddyChen
- * @name
- * @date    2020/06/08 14:42
- * @email   chenshichao@outlook.com
- * @github  https://github.com/FreddyChen
- * @desc
+ *
+ * https://github.com/FreddyChen/KulaKeyboard/blob/master/app/src/main/java/com/freddy/kulakeyboard/sample/utils/SoftKeyboardStateHelper.kt
  */
+
+val keyBoardState = MutableLiveData<Boolean>()
+val keyBoardHeight = MutableLiveData<Int>().apply {
+    value = 0
+}
+
+
 class SoftKeyboardStateHelper : ViewTreeObserver.OnGlobalLayoutListener {
 
-    interface SoftKeyboardStateListener {
-        fun onSoftKeyboardOpened(keyboardHeight: Int)
-        fun onSoftKeyboardClosed()
-    }
-
-    private val listeners: MutableList<SoftKeyboardStateListener> =
-        LinkedList()
     private var activityRootView: View? = null
-    private var lastSoftKeyboardHeightInPx = 0
     private var isSoftKeyboardOpened = false
 
     constructor(activityRootView: View?) : this(activityRootView, false)
@@ -48,45 +44,21 @@ class SoftKeyboardStateHelper : ViewTreeObserver.OnGlobalLayoutListener {
         val visible = heightDifference > screenHeight / 4
         if (!isSoftKeyboardOpened && visible) {
             isSoftKeyboardOpened = true
-            notifyOnSoftKeyboardOpened(heightDifference)
+            onKeyboardOpen(heightDifference)
         } else if (isSoftKeyboardOpened && !visible) {
             isSoftKeyboardOpened = false
-            notifyOnSoftKeyboardClosed()
+            onKeyboardClose()
         }
     }
 
 
-    fun setIsSoftKeyboardOpened(isSoftKeyboardOpened: Boolean) {
-        this.isSoftKeyboardOpened = isSoftKeyboardOpened
+    private fun onKeyboardOpen(keyboardHeightInPx: Int) {
+        keyBoardState.value = true
+        keyBoardHeight.value = keyboardHeightInPx
     }
 
-    fun isSoftKeyboardOpened(): Boolean {
-        return isSoftKeyboardOpened
-    }
-
-    fun getLastSoftKeyboardHeightInPx(): Int {
-        return lastSoftKeyboardHeightInPx
-    }
-
-    fun addSoftKeyboardStateListener(listener: SoftKeyboardStateListener) {
-        listeners.add(listener)
-    }
-
-    fun removeSoftKeyboardStateListener(listener: SoftKeyboardStateListener) {
-        listeners.remove(listener)
-    }
-
-    private fun notifyOnSoftKeyboardOpened(keyboardHeightInPx: Int) {
-        lastSoftKeyboardHeightInPx = keyboardHeightInPx
-        for (listener in listeners) {
-            listener.onSoftKeyboardOpened(keyboardHeightInPx)
-        }
-    }
-
-    private fun notifyOnSoftKeyboardClosed() {
-        for (listener in listeners) {
-            listener.onSoftKeyboardClosed()
-        }
+    private fun onKeyboardClose() {
+        keyBoardState.value = false
     }
 
     fun release() {
