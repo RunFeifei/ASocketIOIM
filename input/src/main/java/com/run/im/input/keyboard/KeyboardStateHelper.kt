@@ -2,33 +2,55 @@ package com.run.im.input.keyboard
 
 import android.graphics.Rect
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import com.run.im.input.IMInput
 import com.run.im.input.screenHeight
 
 /**
+ * Created by PengFeifei on 2020/9/7.
  * See
  * https://github.com/FreddyChen/KulaKeyboard/blob/master/app/src/main/java/com/freddy/kulakeyboard/sample/utils/SoftKeyboardStateHelper.kt
  */
 
 val keyBoardState = MutableLiveData<Boolean?>()
 val keyBoardHeight = MutableLiveData<Int>().apply {
-    postValue(-1)
+    postValue(0)
 }
 
 
-class SoftKeyboardStateHelper : ViewTreeObserver.OnGlobalLayoutListener {
+class KeyboardStateHelper(owner: LifecycleOwner?, private var isSoftKeyboardOpened: Boolean = false) : ViewTreeObserver.OnGlobalLayoutListener {
 
     private var activityRootView: View? = null
-    private var isSoftKeyboardOpened = false
     private var maxHeight = 0
 
-    constructor(activityRootView: View?) : this(activityRootView, false)
 
-    constructor(activityRootView: View?, isSoftKeyboardOpened: Boolean) {
-        this.activityRootView = activityRootView
-        this.isSoftKeyboardOpened = isSoftKeyboardOpened
+    init {
+        if (owner !is AppCompatActivity) {
+            throw IllegalStateException("only support AppCompatActivity")
+        }
+        this.activityRootView = try {
+            (owner.window.decorView.findViewById(android.R.id.content) as ViewGroup)[0]
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+        owner.getLifecycle().addObserver(object : LifecycleEventObserver {
+            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+                if (event == Lifecycle.Event.ON_STOP) {
+                    doRelease()
+                }
+                if (event == Lifecycle.Event.ON_START) {
+                    doObserve()
+                }
+            }
+        })
     }
 
     override fun onGlobalLayout() {
@@ -37,9 +59,8 @@ class SoftKeyboardStateHelper : ViewTreeObserver.OnGlobalLayoutListener {
         if (rect.bottom > maxHeight) {
             maxHeight = rect.bottom
         }
-        val screenHeight: Int = IMInput.context.screenHeight()
         val heightDifference = maxHeight - rect.bottom
-        val visible = heightDifference > screenHeight / 4
+        val visible = heightDifference > IMInput.context.screenHeight() / 4
         if (!isSoftKeyboardOpened && visible) {
             isSoftKeyboardOpened = true
             onKeyboardOpen(heightDifference)
@@ -59,11 +80,15 @@ class SoftKeyboardStateHelper : ViewTreeObserver.OnGlobalLayoutListener {
         keyBoardState.value = false
     }
 
-    fun doObserve() {
+    private fun doObserve() {
         activityRootView?.viewTreeObserver?.addOnGlobalLayoutListener(this)
     }
 
-    fun release() {
+    private fun doRelease() {
         activityRootView?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
+    }
+
+    fun nada() {
+
     }
 }

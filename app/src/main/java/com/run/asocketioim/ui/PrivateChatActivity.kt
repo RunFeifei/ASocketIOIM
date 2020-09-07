@@ -8,10 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.run.asocketioim.R
 import com.run.asocketioim.base.BaseActivity
 import com.run.asocketioim.base.BaseViewModel
-import com.run.im.input.keyboard.SoftKeyboardStateHelper
+import com.run.im.input.keyboard.KeyboardStateHelper
 import com.run.im.input.keyboard.keyBoardHeight
 import com.run.im.input.keyboard.keyBoardState
-import kotlinx.android.synthetic.main.activity_chat_private.*
 import kotlinx.coroutines.launch
 import zlc.season.permissionx.request
 
@@ -43,8 +42,7 @@ class PrivateChatActivity : BaseActivity<BaseViewModel>() {
         viewModel.viewModelScope.launch {
             request(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
         }
-        SoftKeyboardStateHelper(rootLay).doObserve()
-
+        KeyboardStateHelper(this).nada()
     }
 
 
