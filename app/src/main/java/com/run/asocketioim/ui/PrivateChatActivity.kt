@@ -40,17 +40,7 @@ class PrivateChatActivity : BaseActivity<PrivateChatViewModel>() {
     override fun initLivedata(viewModel: PrivateChatViewModel) {
         onlineUsersViewModel.getOnlineUsers()
 
-        keyBoardState.observe(this, Observer<Boolean?> {
-            it?.apply {
-                showToast(if (this) "open" else "close")
-            }
-        })
-
-        keyBoardHeight.observe(this, Observer<Int> {
-            showToast("keyBoardHeight--${it}")
-        })
-
-        listView.linear(onlineUsersViewModel.dataSource) {
+        imLayout.listView.linear(onlineUsersViewModel.dataSource) {
             renderItem<OnlineUserItem> {
                 res(R.layout.item_user)
                 onBind {
@@ -61,14 +51,14 @@ class PrivateChatActivity : BaseActivity<PrivateChatViewModel>() {
                 }
             }
         }
-        listView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        imLayout.listView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
     }
 
     override fun initPage(savedInstanceState: Bundle?) {
         viewModel.viewModelScope.launch {
             request(READ_EXTERNAL_STORAGE, WRITE_EXTERNAL_STORAGE)
         }
-        KeyboardStateHelper(this).nada()
+        imLayout.setActivity(this)
     }
 
 

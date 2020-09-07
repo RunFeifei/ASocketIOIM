@@ -25,7 +25,7 @@ val keyBoardHeight = MutableLiveData<Int>().apply {
 }
 
 
-class KeyboardStateHelper(owner: LifecycleOwner?, private var isSoftKeyboardOpened: Boolean = false) : ViewTreeObserver.OnGlobalLayoutListener {
+class KeyboardStateHelper(owner: LifecycleOwner, private var isSoftKeyboardOpened: Boolean = false) : ViewTreeObserver.OnGlobalLayoutListener {
 
     private var activityRootView: View? = null
     private var maxHeight = 0
