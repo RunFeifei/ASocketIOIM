@@ -8,14 +8,13 @@ import com.run.im.input.IMInput
 import com.run.im.input.screenHeight
 
 /**
- * @author  FreddyChen
- *
+ * See
  * https://github.com/FreddyChen/KulaKeyboard/blob/master/app/src/main/java/com/freddy/kulakeyboard/sample/utils/SoftKeyboardStateHelper.kt
  */
 
-val keyBoardState = MutableLiveData<Boolean>()
+val keyBoardState = MutableLiveData<Boolean?>()
 val keyBoardHeight = MutableLiveData<Int>().apply {
-    value = 0
+    postValue(-1)
 }
 
 
@@ -23,16 +22,15 @@ class SoftKeyboardStateHelper : ViewTreeObserver.OnGlobalLayoutListener {
 
     private var activityRootView: View? = null
     private var isSoftKeyboardOpened = false
+    private var maxHeight = 0
 
     constructor(activityRootView: View?) : this(activityRootView, false)
 
     constructor(activityRootView: View?, isSoftKeyboardOpened: Boolean) {
         this.activityRootView = activityRootView
         this.isSoftKeyboardOpened = isSoftKeyboardOpened
-        activityRootView?.viewTreeObserver?.addOnGlobalLayoutListener(this)
     }
 
-    private var maxHeight = 0
     override fun onGlobalLayout() {
         val rect = Rect()
         activityRootView!!.getWindowVisibleDisplayFrame(rect)
@@ -59,6 +57,10 @@ class SoftKeyboardStateHelper : ViewTreeObserver.OnGlobalLayoutListener {
 
     private fun onKeyboardClose() {
         keyBoardState.value = false
+    }
+
+    fun doObserve() {
+        activityRootView?.viewTreeObserver?.addOnGlobalLayoutListener(this)
     }
 
     fun release() {
