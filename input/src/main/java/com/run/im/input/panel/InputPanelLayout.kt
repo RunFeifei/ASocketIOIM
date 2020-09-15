@@ -39,6 +39,7 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
             } else {
                 showAudio()
             }
+            doKeyboard()
         }
         emotionImageView.setOnClickListener {
             if (isEmojiShow) {
@@ -46,6 +47,7 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
             } else {
                 showEmoji()
             }
+            doKeyboard()
         }
         extImageView.setOnClickListener {
             if (isSpecialShow) {
@@ -53,6 +55,10 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
             } else {
                 showSpecial()
             }
+            doKeyboard()
+        }
+        editText.setOnClickListener {
+            editText.showKeyboard(context)
         }
     }
 
@@ -63,7 +69,6 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         audioImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
         hideEmoji()
         hideSpecial()
-        editText.hideKeyboard(context)
         isAudioShow = true
     }
 
@@ -75,12 +80,14 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
     }
 
     private fun showEmoji() {
-        emotionLayout.visible()
         hideAudio()
         hideSpecial()
         emotionImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
-        editText.hideKeyboard(context)
         isEmojiShow = true
+        postDelayed({
+            layMulti.visible()
+            emotionLayout.visible()
+        }, 200)
     }
 
     private fun hideEmoji() {
@@ -103,14 +110,32 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
 
     private fun showEdit() {
         editText.visible()
-        editText.requestFocus()
-        editText.showKeyboard(context)
     }
 
     private fun hideEdit() {
-        editText.clearFocus()
-        editText.hideKeyboard(context)
         editText.gone()
+    }
+
+    private fun doKeyboard() {
+        if (isAudioShow || isEmojiShow || isSpecialShow) {
+            editText.hideKeyboard(context)
+            return
+        }
+    }
+
+    fun onKeyboard(show: Boolean, keyboardHeight: Int) {
+//        post {
+//            if (!show) {
+//                layMulti.gone()
+//            } else {
+//                layMulti.layoutParams?.apply {
+//                    height = keyboardHeight*2
+//                    layMulti.layoutParams = this
+//                }
+//                layMulti.visible()
+//            }
+//        }
+
     }
 
 

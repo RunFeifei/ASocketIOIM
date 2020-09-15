@@ -35,11 +35,13 @@ class IMLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             keyBoardState.observe(own, Observer<Boolean?> {
                 it?.apply {
                     showToast(if (this) "open" else "close")
+                    inputView.onKeyboard(this, keyBoardHeight.value!!)
                 }
             })
 
             keyBoardHeight.observe(own, Observer<Int> { result ->
                 showToast("keyBoardHeight--${result}")
+                inputView.onKeyboard(keyBoardState.value!!, result)
             })
         }
     }

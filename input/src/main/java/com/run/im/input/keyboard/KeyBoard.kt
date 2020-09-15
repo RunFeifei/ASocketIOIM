@@ -16,10 +16,11 @@ fun EditText?.showKeyboard(context: Context) {
 
 fun EditText?.hideKeyboard(context: Context) {
     this ?: return
-    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(this.windowToken, InputMethodManager.SHOW_IMPLICIT)
+    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(this.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 }
 
 fun Activity?.hideKeyboard() {
     this ?: return
-    (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(window.decorView.windowToken, InputMethodManager.SHOW_IMPLICIT)
+    window ?: return
+    (getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(window.decorView.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
 }

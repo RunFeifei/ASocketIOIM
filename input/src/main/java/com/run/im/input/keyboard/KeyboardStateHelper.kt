@@ -19,10 +19,8 @@ import com.run.im.input.screenHeight
  * https://github.com/FreddyChen/KulaKeyboard/blob/master/app/src/main/java/com/freddy/kulakeyboard/sample/utils/SoftKeyboardStateHelper.kt
  */
 
-val keyBoardState = MutableLiveData<Boolean?>()
-val keyBoardHeight = MutableLiveData<Int>().apply {
-    postValue((IMInput.context.screenHeight() * 0.4f).toInt())
-}
+val keyBoardState = MutableLiveData<Boolean>(false)
+val keyBoardHeight = MutableLiveData<Int>((IMInput.context.screenHeight() * 0.4f).toInt())
 
 
 class KeyboardStateHelper(owner: LifecycleOwner, private var isSoftKeyboardOpened: Boolean = false) : ViewTreeObserver.OnGlobalLayoutListener {

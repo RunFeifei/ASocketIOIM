@@ -100,27 +100,33 @@
         tools:background="#ffff00"
         tools:visibility="visible" />
 
-    <com.run.im.input.emoji.EmotionLayout
-        android:id="@+id/emotionLayout"
+    <FrameLayout
+        android:id="@+id/layMulti"
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_custom_keyboard_size"
-        android:visibility="gone"
+        android:visibility="visible"
+        tools:visibility="gone"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editText"
-        tools:background="#f00000"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@id/editText">
 
-    <com.run.im.input.special.SpecialPanelLayout
-        android:id="@+id/specialLayout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_custom_keyboard_size"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editText"
-        tools:background="#f00000"
-        tools:visibility="visible" />
+        <com.run.im.input.emoji.EmotionLayout
+            android:id="@+id/emotionLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible"
+            tools:background="#f00000"
+            tools:visibility="visible" />
+
+        <com.run.im.input.special.SpecialPanelLayout
+            android:id="@+id/specialLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            tools:background="#f00000"
+            tools:visibility="visible" />
+
+    </FrameLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
