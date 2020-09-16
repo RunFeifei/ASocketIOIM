@@ -46,11 +46,11 @@ class KeyboardStateHelper(owner: LifecycleOwner, private var isSoftKeyboardOpene
         }
         owner.getLifecycle().addObserver(object : LifecycleEventObserver {
             override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-                if (event == Lifecycle.Event.ON_STOP) {
-                    doRelease()
-                }
                 if (event == Lifecycle.Event.ON_START) {
                     doObserve()
+                }
+                if (event == Lifecycle.Event.ON_STOP) {
+                    doRelease()
                 }
             }
         })
@@ -122,28 +122,14 @@ class AdjustNothingKeyboardStateHelper(owner: LifecycleOwner, private var isSoft
 
         owner.getLifecycle().addObserver(object : LifecycleEventObserver {
             override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-                if (event == Lifecycle.Event.ON_STOP) {
+                if (event == Lifecycle.Event.ON_START) {
                     doObserve()
                 }
-                if (event == Lifecycle.Event.ON_START) {
+                if (event == Lifecycle.Event.ON_STOP) {
                     doRelease()
                 }
-                if (event == Lifecycle.Event.ON_DESTROY) {
-                    dismiss()
-                }
-
             }
         })
-        activityRootView?.post {
-            showAtLocation(
-                activityRootView,
-                Gravity.NO_GRAVITY,
-                0,
-                0
-            )
-        }
-
-
     }
 
     override fun onGlobalLayout() {
@@ -165,14 +151,20 @@ class AdjustNothingKeyboardStateHelper(owner: LifecycleOwner, private var isSoft
     }
 
     private fun doObserve() {
-        activityRootView?.postDelayed({
-            contentView?.viewTreeObserver?.addOnGlobalLayoutListener(this)
-        }, 1000)
-
+        contentView?.viewTreeObserver?.addOnGlobalLayoutListener(this)
+        activityRootView?.post {
+            showAtLocation(
+                activityRootView,
+                Gravity.NO_GRAVITY,
+                0,
+                0
+            )
+        }
     }
 
     private fun doRelease() {
         contentView?.viewTreeObserver?.removeOnGlobalLayoutListener(this)
+        dismiss()
     }
 
     private fun onKeyboardOpen(keyboardHeightInPx: Int) {

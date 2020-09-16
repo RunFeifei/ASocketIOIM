@@ -3,16 +3,12 @@ package com.run.im
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.run.im.input.keyboard.AdjustNothingKeyboardStateHelper
-import com.run.im.input.keyboard.KeyboardStatePopupWindow
 import com.run.im.input.keyboard.keyBoardHeight
 import com.run.im.input.keyboard.keyBoardState
 import com.run.im.input.panel.InputPanelLayout
@@ -35,7 +31,7 @@ class IMLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     fun setActivity(owner: LifecycleOwner?) {
         owner?.let { own ->
             this.owner = own
-            KeyboardStatePopupWindow(own as Context, ((owner as AppCompatActivity).window.decorView.findViewById(android.R.id.content) as ViewGroup)[0])
+            AdjustNothingKeyboardStateHelper(own).nada()
             keyBoardState.observe(own, Observer<Boolean?> {
                 it?.apply {
                     showToast(if (this) "open" else "close")

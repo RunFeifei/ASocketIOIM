@@ -129,7 +129,7 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 layMulti.gone()
             } else {
                 layMulti.layoutParams = layMulti.layoutParams?.apply {
-                    height = keyboardHeight * 2
+                    height = keyboardHeight
                 }
                 layMulti.visible()
             }
