@@ -46,15 +46,9 @@ class OnlineUsersDataSource : YashaDataSource() {
         val json =
             "[{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"},{\"username\":\"123\"}]"
         val users: List<User> = Gson().fromJson(json, object : TypeToken<List<User?>?>() {}.type)
-        users.map {
-            OnlineUserItem(it)
-        }
         return users.map {
             OnlineUserItem(it)
-        }.apply {
-            //58
-            Log.e("OnlineUsersDataSource", "init Size--> $size")
-        }
+        }.subList(0,10)
 
     }
 }

@@ -4,18 +4,15 @@ import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.graphics.Color
 import android.os.Bundle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.run.asocketioim.R
 import com.run.asocketioim.base.BaseActivity
 import com.run.asocketioim.viewmodel.OnlineUserItem
 import com.run.asocketioim.viewmodel.OnlineUsersViewModel
 import com.run.asocketioim.viewmodel.PrivateChatViewModel
-import com.run.im.input.keyboard.KeyboardStateHelper
-import com.run.im.input.keyboard.keyBoardHeight
-import com.run.im.input.keyboard.keyBoardState
 import kotlinx.android.synthetic.main.activity_chat_private.*
 import kotlinx.android.synthetic.main.item_user.*
 import kotlinx.coroutines.launch
@@ -52,6 +49,7 @@ class PrivateChatActivity : BaseActivity<PrivateChatViewModel>() {
             }
         }
         imLayout.listView.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+        (imLayout.listView.layoutManager as LinearLayoutManager).stackFromEnd = true
     }
 
     override fun initPage(savedInstanceState: Bundle?) {
