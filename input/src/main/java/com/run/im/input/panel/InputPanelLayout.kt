@@ -131,6 +131,7 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
             editText.hideKeyboard()
             return
         }
+        editText.showKeyboard()
     }
 
     fun onKeyboard(show: Boolean?, keyboardHeight: Int?) {
