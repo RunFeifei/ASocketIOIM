@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:animateLayoutChanges="true"
     android:background="#F8F8F8"
     android:focusableInTouchMode="true"
     tools:background="#000000">
@@ -105,17 +104,15 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_custom_keyboard_size"
         android:visibility="gone"
-        tools:visibility="gone"
-        android:animateLayoutChanges="true"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editText">
+        app:layout_constraintTop_toBottomOf="@id/editText"
+        tools:visibility="gone">
 
         <com.run.im.input.emoji.EmotionLayout
             android:id="@+id/emotionLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:animateLayoutChanges="true"
             android:visibility="visible"
             tools:background="#f00000"
             tools:visibility="visible" />
