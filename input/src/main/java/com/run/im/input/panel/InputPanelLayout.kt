@@ -133,7 +133,9 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         }
     }
 
-    fun onKeyboard(show: Boolean, keyboardHeight: Int) {
+    fun onKeyboard(show: Boolean?, keyboardHeight: Int?) {
+        show ?: return
+        keyboardHeight ?: return
         post {
             if (!show && !isSpecialShow && !isEmojiShow) {
                 layMulti.gone()
