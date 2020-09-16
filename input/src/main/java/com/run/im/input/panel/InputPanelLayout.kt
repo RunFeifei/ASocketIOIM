@@ -43,7 +43,7 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         }
         emotionImageView.setOnClickListener {
             if (isEmojiShow) {
-                hideEmoji()
+                hideEmoji(clickAudio = false, clickSpecial = false, clickSelf = true)
             } else {
                 showEmoji()
             }
@@ -51,14 +51,14 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         }
         extImageView.setOnClickListener {
             if (isSpecialShow) {
-                hideSpecial()
+                hideSpecial(clickAudio = false, clickEmoji = false, clickSelf = true)
             } else {
                 showSpecial()
             }
             doKeyboard()
         }
         editText.setOnClickListener {
-            editText.showKeyboard(context)
+            editText.showKeyboard()
         }
     }
 
@@ -67,8 +67,8 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         audioButton.visible()
         hideEdit()
         audioImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
-        hideEmoji()
-        hideSpecial()
+        hideEmoji(clickAudio = true, clickSpecial = false)
+        hideSpecial(clickAudio = true, clickEmoji = false)
         isAudioShow = true
     }
 
@@ -81,30 +81,40 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
 
     private fun showEmoji() {
         hideAudio()
-        hideSpecial()
+        hideSpecial(clickAudio = false, clickEmoji = true)
         emotionImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
         isEmojiShow = true
-        postDelayed({
-            layMulti.visible()
-            emotionLayout.visible()
-        }, 200)
+        layMulti.visible()
+        emotionLayout.visible()
     }
 
-    private fun hideEmoji() {
+    private fun hideEmoji(clickAudio: Boolean = false, clickSpecial: Boolean = false, clickSelf: Boolean = false) {
         emotionLayout.gone()
+        if (clickAudio) {
+            layMulti.gone()
+        }
+        if (clickSelf) {
+            editText.showKeyboard()
+        }
         emotionImageView.setImageResource(R.mipmap.ic_cheat_emo)
         isEmojiShow = false
     }
 
     private fun showSpecial() {
         specialLayout.visible()
-        hideEmoji()
+        hideEmoji(clickAudio = false, clickSpecial = true)
         hideAudio()
         isSpecialShow = true
     }
 
-    private fun hideSpecial() {
+    private fun hideSpecial(clickAudio: Boolean = false, clickEmoji: Boolean = false, clickSelf: Boolean = false) {
         specialLayout.gone()
+        if (clickAudio) {
+            layMulti.gone()
+        }
+        if (clickSelf) {
+            editText.showKeyboard()
+        }
         isSpecialShow = false
     }
 
@@ -118,7 +128,7 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
 
     private fun doKeyboard() {
         if (isAudioShow || isEmojiShow || isSpecialShow) {
-            editText.hideKeyboard(context)
+            editText.hideKeyboard()
             return
         }
     }
@@ -128,8 +138,12 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
             if (!show && !isSpecialShow && !isEmojiShow) {
                 layMulti.gone()
             } else {
-                layMulti.layoutParams = layMulti.layoutParams?.apply {
+                layMulti.layoutParams?.apply {
+                    if (height == keyboardHeight) {
+                        return@apply
+                    }
                     height = keyboardHeight
+                    layMulti.layoutParams = this
                 }
                 layMulti.visible()
             }
