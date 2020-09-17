@@ -1,6 +1,7 @@
 package com.run.im
 
 import android.animation.Animator
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Context
 import android.util.AttributeSet
@@ -25,7 +26,6 @@ class IMLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     var listView: RecyclerView
     var inputView: InputPanelLayout
     private var owner: LifecycleOwner? = null
-    private val listViewEverScrolled = false
 
     init {
         LayoutInflater.from(context).inflate(R.layout.layout_msglist_input, this)
@@ -40,13 +40,13 @@ class IMLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             keyBoardState.observe(own, Observer<Boolean?> {
                 it?.apply {
                     showToast(if (this) "open" else "close")
-                    inputView.onKeyboard(this, keyBoardHeight.value)
+                    listViewMove(this, keyBoardHeight.value)
                 }
             })
 
             keyBoardHeight.observe(own, Observer<Int?> { result ->
                 showToast("keyBoardHeight--${result}")
-                inputView.onKeyboard(keyBoardState.value, result)
+                listViewMove(keyBoardState.value, result)
             })
         }
     }
@@ -56,14 +56,15 @@ class IMLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
 
-    private fun listViewMove(keyboardShow: Boolean, keyBoardHeight: Int?) {
+    private fun listViewMove(keyboardShow: Boolean?, keyBoardHeight: Int?) {
+        keyboardShow ?: return
         keyBoardHeight ?: return
+        val animatorInput = inputView.onAnimate(keyboardShow, keyBoardHeight)
+
         val from = if (keyboardShow) 0f else -keyBoardHeight.toFloat()
         val to = if (keyboardShow) -keyBoardHeight.toFloat() else 0f
-        val animator: ObjectAnimator = ObjectAnimator.ofFloat(listView, "translationY", from, to)
-        animator.interpolator = DecelerateInterpolator()
-        animator.duration = 250
-        animator.addListener(object : Animator.AnimatorListener {
+        val animatorListview: ObjectAnimator = ObjectAnimator.ofFloat(listView, "translationY", from, to)
+        animatorListview.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator?) {
             }
 
@@ -79,7 +80,12 @@ class IMLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             override fun onAnimationRepeat(animation: Animator?) {
             }
         })
-        animator.start()
+
+        val animatorSet = AnimatorSet()
+        animatorSet.duration = 250
+        animatorSet.interpolator = DecelerateInterpolator()
+        animatorSet.play(animatorInput).with(animatorListview)
+        animatorSet.start()
     }
 
 

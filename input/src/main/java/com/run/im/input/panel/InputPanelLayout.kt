@@ -1,9 +1,12 @@
 package com.run.im.input.panel
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.run.im.input.R
 import com.run.im.input.gone
@@ -50,11 +53,7 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
             doKeyboard()
         }
         extImageView.setOnClickListener {
-            if (isSpecialShow) {
-                hideSpecial(clickAudio = false, clickEmoji = false, clickSelf = true)
-            } else {
-                showSpecial()
-            }
+            showSpecial()
             doKeyboard()
         }
         editText.setOnClickListener {
@@ -80,18 +79,20 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
     }
 
     private fun showEmoji() {
-        hideAudio()
+        if (isAudioShow) {
+            hideAudio()
+        }
         hideSpecial(clickAudio = false, clickEmoji = true)
         emotionImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
         isEmojiShow = true
-        layMulti.visible()
         emotionLayout.visible()
+        onAnimate(true)
     }
 
     private fun hideEmoji(clickAudio: Boolean = false, clickSpecial: Boolean = false, clickSelf: Boolean = false) {
         emotionLayout.gone()
         if (clickAudio) {
-            layMulti.gone()
+            onAnimate(false)
         }
         if (clickSelf) {
             editText.showKeyboard()
@@ -110,7 +111,7 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
     private fun hideSpecial(clickAudio: Boolean = false, clickEmoji: Boolean = false, clickSelf: Boolean = false) {
         specialLayout.gone()
         if (clickAudio) {
-            layMulti.gone()
+            onAnimate(false)
         }
         if (clickSelf) {
             editText.showKeyboard()
@@ -134,24 +135,27 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
         editText.showKeyboard()
     }
 
-    fun onKeyboard(show: Boolean?, keyboardHeight: Int?) {
-        show ?: return
-        keyboardHeight ?: return
-        post {
-            if (!show && !isSpecialShow && !isEmojiShow) {
-                layMulti.gone()
-            } else {
-                layMulti.layoutParams?.apply {
-                    if (height == keyboardHeight) {
-                        return@apply
-                    }
-                    height = keyboardHeight
-                    layMulti.layoutParams = this
-                }
-                layMulti.visible()
-            }
-        }
 
+    /**
+     * 输入框下面的部分的高度动态调整
+     */
+    fun onAnimate(keyboardShow: Boolean?, height: Int? = com.run.im.input.keyboard.keyBoardHeight.value): ValueAnimator? {
+        keyboardShow ?: return null
+        height ?: return null
+        val from = if (keyboardShow) 1 else height
+        val to = if (keyboardShow) height else 1
+        val animator: ValueAnimator = ValueAnimator.ofInt(from, to)
+        animator.addUpdateListener {
+            val heightAnimate = it.animatedValue as Int
+            Log.e("onKeyboard--->", heightAnimate.toString())
+            layMulti.layoutParams = layMulti.layoutParams?.apply {
+                this.height = heightAnimate
+            }
+            layMulti.requestLayout()
+            requestLayout()
+            (parent as ViewGroup).requestLayout()
+        }
+        return animator
     }
 
 

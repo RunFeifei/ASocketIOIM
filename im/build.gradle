@@ -39,5 +39,6 @@ dependencies {
     api project(':input')
     implementation 'com.github.MingYueChunQiu:RecorderManager:0.2.29'
     implementation 'androidx.viewpager2:viewpager2:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
 
 }
