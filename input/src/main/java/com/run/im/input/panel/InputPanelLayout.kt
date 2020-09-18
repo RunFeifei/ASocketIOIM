@@ -37,30 +37,32 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
 
     private fun setClickListener() {
         audioImageView.setOnClickListener {
-            notifyState(isClickAudio = true, isClickEmoji = false, isClickSpecial = false, isClickEdt = false)
+            onViewClick(isClickAudio = true, isClickEmoji = false, isClickSpecial = false, isClickEdt = false)
         }
         emotionImageView.setOnClickListener {
-            notifyState(isClickAudio = false, isClickEmoji = true, isClickSpecial = false, isClickEdt = false)
+            onViewClick(isClickAudio = false, isClickEmoji = true, isClickSpecial = false, isClickEdt = false)
         }
         extImageView.setOnClickListener {
-            notifyState(isClickAudio = false, isClickEmoji = false, isClickSpecial = true, isClickEdt = false)
+            onViewClick(isClickAudio = false, isClickEmoji = false, isClickSpecial = true, isClickEdt = false)
         }
         editText.setOnClickListener {
-            notifyState(isClickAudio = false, isClickEmoji = false, isClickSpecial = false, isClickEdt = true)
+            onViewClick(isClickAudio = false, isClickEmoji = false, isClickSpecial = false, isClickEdt = true)
         }
     }
 
-    private fun notifyState(isClickAudio: Boolean, isClickEmoji: Boolean, isClickSpecial: Boolean, isClickEdt: Boolean) {
+    private fun onViewClick(isClickAudio: Boolean, isClickEmoji: Boolean, isClickSpecial: Boolean, isClickEdt: Boolean) {
         if (isClickEdt) {
             if (isAudioShow) {
                 throw IllegalStateException("00000000")
             }
             if (isEmojiShow) {
                 emotionImageView.setImageResource(R.mipmap.ic_cheat_emo)
-                editText.showKeyboard()
+                //TODO 弹键盘&放大
+                doAnimate(enlarge = 1, keyboardShow = 1)
             }
             if (isSpecialShow) {
-                editText.showKeyboard()
+                //TODO 弹键盘&放大
+                doAnimate(enlarge = 1, keyboardShow = 1)
             }
             return
         }
@@ -89,8 +91,8 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 editText.visible()
 
                 specialLayout.visible()
-                //TODO 做放大动画
-                doAnimate(enlarge = true, doNothing = false)
+                //TODO 放大 键盘保持隐藏
+                doAnimate(enlarge = 1, keyboardShow = 0)
                 isAudioShow = false
                 isSpecialShow = true
             }
@@ -99,11 +101,12 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 specialLayout.visible()
                 isSpecialShow = true
                 if (height > 10) {
-                    editText.hideKeyboard()
-                    //TODO 不做动画!!
+                    //TODO 不做动画!! 键盘收起来
+                    doAnimate(enlarge = 0, keyboardShow = -1)
                     return@apply
                 }
-                //TODO 做放大动画
+                //TODO 放大 键盘保持隐藏
+                doAnimate(enlarge = 1, keyboardShow = 0)
             }
 
             return
@@ -116,7 +119,8 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 editText.visible()
                 emotionImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
                 emotionLayout.invisible()
-                editText.showKeyboard()
+                //TODO 弹键盘&放大
+                doAnimate(enlarge = 1, keyboardShow = 1)
                 isEmojiShow = false
                 return
             }
@@ -131,7 +135,8 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 editText.visible()
                 emotionLayout.visible()
                 emotionImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
-                //TODO 做放大动画
+                //TODO 放大 键盘保持隐藏
+                doAnimate(enlarge = 1, keyboardShow = 0)
                 isAudioShow = false
                 isEmojiShow = true
                 return
@@ -150,11 +155,13 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 emotionImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
                 isEmojiShow = true
                 if (height > 10) {
-                    editText.hideKeyboard()
-                    //TODO 不做动画!!
+                    //TODO 不做动画!! 收起来键盘
+                    doAnimate(enlarge = 0, keyboardShow = -1)
                     return@apply
                 }
-                //TODO 放大动画
+                //TODO 放大动画 键盘保持隐藏
+                doAnimate(enlarge = 1, keyboardShow = 0)
+
             }
             return
         }
@@ -164,7 +171,8 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 audioButton.invisible()
                 audioImageView.setImageResource(R.mipmap.ic_cheat_voice)
                 editText.visible()
-                editText.showKeyboard()
+                //TODO 弹键盘&放大
+                doAnimate(enlarge = 1, keyboardShow = 1)
                 isAudioShow = false
                 return
             }
@@ -179,7 +187,8 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 audioImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
                 isSpecialShow = false
                 isAudioShow = true
-                //TODO 做缩小动画!!
+                //TODO 缩小 键盘保持隐藏
+                doAnimate(enlarge = -1, keyboardShow = 0)
                 return
             }
             if (isEmojiShow) {
@@ -191,7 +200,8 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 audioImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
                 isEmojiShow = false
                 isAudioShow = true
-                //TODO 做缩小动画!!
+                //TODO 缩小 键盘保持隐藏
+                doAnimate(enlarge = -1, keyboardShow = 0)
             }
             //这里就是默认状态 可能是默认初试状态那么需要弹键盘 也可能已经是放大状态了这个时候需要隐藏键盘显示emoji但是不做动画
             layMulti.layoutParams?.apply {
@@ -200,9 +210,11 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
                 audioImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
                 isAudioShow = true
                 if (height > 10) {
-                    editText.hideKeyboard()
+                    //TODO 缩小&收键盘
+                    doAnimate(enlarge = -1, keyboardShow = -1)
                     return@apply
                 }
+                doAnimate(enlarge = 0, keyboardShow = 0)
             }
         }
 
@@ -212,18 +224,24 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
     /**
      * 配合键盘的弹起和回落
      * 输入框下方的view做放大or缩小动画
+     * 0  保持原样
+     * 1  放大or打开键盘
+     * -1 缩小or关闭键盘
      */
-    private fun doAnimate(enlarge: Boolean, doNothing: Boolean) {
+    private fun doAnimate(enlarge: Int, keyboardShow: Int) {
+        if (enlarge == 0 && keyboardShow == 0) {//00
+            return
+        }
+        if (enlarge == 0) {
+            showKeyBoard()
+        }
+
 
     }
 
 
     /**
      * 输入框下面的部分的高度动态调整
-     * 禁止内部调用!!!!!!!
-     * 1 如果显示表情中 点击输入框 不需要再做动画了!!! 只需要弹键盘
-     * 2 special显示中 但是没有键盘 点击了语音.不需要隐藏键盘 但是需要做回缩动画
-     * 3 special显示中 但是没有键盘 点击了输入框,只需要弹键盘不需要做动画
      */
     fun getAnimate(keyboardShow: Boolean?, height: Int? = com.run.im.input.keyboard.keyBoardHeight.value): ValueAnimator? {
         keyboardShow ?: return null
@@ -245,7 +263,11 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
     }
 
     fun showKeyBoard(show: Boolean) {
-
+        if (show) {
+            editText.showKeyboard()
+        } else {
+            editText.hideKeyboard()
+        }
     }
 
 
