@@ -59,7 +59,7 @@ class IMLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     private fun listViewMove(keyboardShow: Boolean?, keyBoardHeight: Int?) {
         keyboardShow ?: return
         keyBoardHeight ?: return
-        val animatorInput = inputView.onAnimate(keyboardShow, keyBoardHeight)
+        val animatorInput = inputView.getAnimate(keyboardShow, keyBoardHeight)
 
         val from = if (keyboardShow) 0f else -keyBoardHeight.toFloat()
         val to = if (keyboardShow) -keyBoardHeight.toFloat() else 0f

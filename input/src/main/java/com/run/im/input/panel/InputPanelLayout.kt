@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import com.run.im.input.R
-import com.run.im.input.gone
+import com.run.im.input.invisible
 import com.run.im.input.keyboard.hideKeyboard
 import com.run.im.input.keyboard.showKeyboard
 import com.run.im.input.visible
@@ -37,109 +37,195 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
 
     private fun setClickListener() {
         audioImageView.setOnClickListener {
-            if (isAudioShow) {
-                hideAudio()
-            } else {
-                showAudio()
-            }
-            doKeyboard()
+            notifyState(isClickAudio = true, isClickEmoji = false, isClickSpecial = false, isClickEdt = false)
         }
         emotionImageView.setOnClickListener {
-            if (isEmojiShow) {
-                hideEmoji(clickAudio = false, clickSpecial = false, clickSelf = true)
-            } else {
-                showEmoji()
-            }
-            doKeyboard()
+            notifyState(isClickAudio = false, isClickEmoji = true, isClickSpecial = false, isClickEdt = false)
         }
         extImageView.setOnClickListener {
-            showSpecial()
-            doKeyboard()
+            notifyState(isClickAudio = false, isClickEmoji = false, isClickSpecial = true, isClickEdt = false)
         }
         editText.setOnClickListener {
-            editText.showKeyboard()
+            notifyState(isClickAudio = false, isClickEmoji = false, isClickSpecial = false, isClickEdt = true)
         }
     }
 
-
-    private fun showAudio() {
-        audioButton.visible()
-        hideEdit()
-        audioImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
-        hideEmoji(clickAudio = true, clickSpecial = false)
-        hideSpecial(clickAudio = true, clickEmoji = false)
-        isAudioShow = true
-    }
-
-    private fun hideAudio() {
-        audioButton.gone()
-        showEdit()
-        audioImageView.setImageResource(R.mipmap.ic_cheat_voice)
-        isAudioShow = false
-    }
-
-    private fun showEmoji() {
-        if (isAudioShow) {
-            hideAudio()
-        }
-        hideSpecial(clickAudio = false, clickEmoji = true)
-        emotionImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
-        isEmojiShow = true
-        emotionLayout.visible()
-        onAnimate(true)
-    }
-
-    private fun hideEmoji(clickAudio: Boolean = false, clickSpecial: Boolean = false, clickSelf: Boolean = false) {
-        emotionLayout.gone()
-        if (clickAudio) {
-            onAnimate(false)
-        }
-        if (clickSelf) {
-            editText.showKeyboard()
-        }
-        emotionImageView.setImageResource(R.mipmap.ic_cheat_emo)
-        isEmojiShow = false
-    }
-
-    private fun showSpecial() {
-        specialLayout.visible()
-        hideEmoji(clickAudio = false, clickSpecial = true)
-        hideAudio()
-        isSpecialShow = true
-    }
-
-    private fun hideSpecial(clickAudio: Boolean = false, clickEmoji: Boolean = false, clickSelf: Boolean = false) {
-        specialLayout.gone()
-        if (clickAudio) {
-            onAnimate(false)
-        }
-        if (clickSelf) {
-            editText.showKeyboard()
-        }
-        isSpecialShow = false
-    }
-
-    private fun showEdit() {
-        editText.visible()
-    }
-
-    private fun hideEdit() {
-        editText.gone()
-    }
-
-    private fun doKeyboard() {
-        if (isAudioShow || isEmojiShow || isSpecialShow) {
-            editText.hideKeyboard()
+    private fun notifyState(isClickAudio: Boolean, isClickEmoji: Boolean, isClickSpecial: Boolean, isClickEdt: Boolean) {
+        if (isClickEdt) {
+            if (isAudioShow) {
+                throw IllegalStateException("00000000")
+            }
+            if (isEmojiShow) {
+                emotionImageView.setImageResource(R.mipmap.ic_cheat_emo)
+                editText.showKeyboard()
+            }
+            if (isSpecialShow) {
+                editText.showKeyboard()
+            }
             return
         }
-        editText.showKeyboard()
+        //点击了special
+        if (isClickSpecial) {
+            //如果已经在显示中了
+            if (isSpecialShow) {
+                return
+            }
+            if (isEmojiShow && isAudioShow) {
+                throw IllegalStateException("111111")
+            }
+            //如果显示的是emoji,此时isAudioShow一定是false
+            if (isEmojiShow) {
+                emotionLayout.invisible()
+                specialLayout.visible()
+                isEmojiShow = false
+                isSpecialShow = true
+                return
+            }
+            //如果显示的是语音,那么此时一定isEmojiShow=false
+            if (isAudioShow) {
+                //先把语音部分干掉
+                audioButton.invisible()
+                audioImageView.setImageResource(R.mipmap.ic_cheat_voice)
+                editText.visible()
+
+                specialLayout.visible()
+                //TODO 做放大动画
+                doAnimate(enlarge = true, doNothing = false)
+                isAudioShow = false
+                isSpecialShow = true
+            }
+            //这里就是默认状态 可能是默认初试状态那么需要弹键盘 也可能已经是放大状态了这个时候需要隐藏键盘显示special但是不做动画
+            layMulti.layoutParams?.apply {
+                specialLayout.visible()
+                isSpecialShow = true
+                if (height > 10) {
+                    editText.hideKeyboard()
+                    //TODO 不做动画!!
+                    return@apply
+                }
+                //TODO 做放大动画
+            }
+
+            return
+        }
+        //点击了emoji
+        if (isClickEmoji) {
+            //如果已经在显示中了,那么需要切回到默认状态
+            if (isEmojiShow) {
+                //这个应该是多余的
+                editText.visible()
+                emotionImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
+                emotionLayout.invisible()
+                editText.showKeyboard()
+                isEmojiShow = false
+                return
+            }
+            if (isSpecialShow && isAudioShow) {
+                throw IllegalStateException("22222222")
+            }
+            //下面的逻辑 emoji就是没有显示中了
+            if (isAudioShow) {
+                //先把语音部分干掉
+                audioButton.invisible()
+                audioImageView.setImageResource(R.mipmap.ic_cheat_voice)
+                editText.visible()
+                emotionLayout.visible()
+                emotionImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
+                //TODO 做放大动画
+                isAudioShow = false
+                isEmojiShow = true
+                return
+            }
+            if (isSpecialShow) {
+                specialLayout.invisible()
+                emotionLayout.visible()
+                emotionImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
+                isSpecialShow = false
+                isEmojiShow = true
+                return
+            }
+            //这里就是默认状态 可能是默认初试状态那么需要弹键盘 也可能已经是放大状态了这个时候需要隐藏键盘显示emoji但是不做动画
+            layMulti.layoutParams?.apply {
+                emotionLayout.visible()
+                emotionImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
+                isEmojiShow = true
+                if (height > 10) {
+                    editText.hideKeyboard()
+                    //TODO 不做动画!!
+                    return@apply
+                }
+                //TODO 放大动画
+            }
+            return
+        }
+        if (isClickAudio) {
+            if (isAudioShow) {
+                //先把语音部分干掉
+                audioButton.invisible()
+                audioImageView.setImageResource(R.mipmap.ic_cheat_voice)
+                editText.visible()
+                editText.showKeyboard()
+                isAudioShow = false
+                return
+            }
+            if (isSpecialShow && isEmojiShow) {
+                throw IllegalStateException("333333333")
+            }
+            if (isSpecialShow) {
+                specialLayout.invisible()
+                //语音显示出来
+                audioButton.visible()
+                editText.invisible()
+                audioImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
+                isSpecialShow = false
+                isAudioShow = true
+                //TODO 做缩小动画!!
+                return
+            }
+            if (isEmojiShow) {
+                emotionLayout.invisible()
+                emotionImageView.setImageResource(R.mipmap.ic_cheat_emo)
+                //语音显示出来
+                audioButton.visible()
+                editText.invisible()
+                audioImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
+                isEmojiShow = false
+                isAudioShow = true
+                //TODO 做缩小动画!!
+            }
+            //这里就是默认状态 可能是默认初试状态那么需要弹键盘 也可能已经是放大状态了这个时候需要隐藏键盘显示emoji但是不做动画
+            layMulti.layoutParams?.apply {
+                audioButton.visible()
+                editText.invisible()
+                audioImageView.setImageResource(R.mipmap.ic_cheat_keyboard)
+                isAudioShow = true
+                if (height > 10) {
+                    editText.hideKeyboard()
+                    return@apply
+                }
+            }
+        }
+
+    }
+
+
+    /**
+     * 配合键盘的弹起和回落
+     * 输入框下方的view做放大or缩小动画
+     */
+    private fun doAnimate(enlarge: Boolean, doNothing: Boolean) {
+
     }
 
 
     /**
      * 输入框下面的部分的高度动态调整
+     * 禁止内部调用!!!!!!!
+     * 1 如果显示表情中 点击输入框 不需要再做动画了!!! 只需要弹键盘
+     * 2 special显示中 但是没有键盘 点击了语音.不需要隐藏键盘 但是需要做回缩动画
+     * 3 special显示中 但是没有键盘 点击了输入框,只需要弹键盘不需要做动画
      */
-    fun onAnimate(keyboardShow: Boolean?, height: Int? = com.run.im.input.keyboard.keyBoardHeight.value): ValueAnimator? {
+    fun getAnimate(keyboardShow: Boolean?, height: Int? = com.run.im.input.keyboard.keyBoardHeight.value): ValueAnimator? {
         keyboardShow ?: return null
         height ?: return null
         val from = if (keyboardShow) 1 else height
@@ -156,6 +242,10 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
             (parent as ViewGroup).requestLayout()
         }
         return animator
+    }
+
+    fun showKeyBoard(show: Boolean) {
+
     }
 
 

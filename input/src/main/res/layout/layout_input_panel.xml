@@ -112,7 +112,7 @@
             android:id="@+id/emotionLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"
+            android:visibility="invisible"
             tools:background="#f00000"
             tools:visibility="visible" />
 
