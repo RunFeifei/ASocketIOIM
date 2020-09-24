@@ -31,6 +31,11 @@ class IMLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
         LayoutInflater.from(context).inflate(R.layout.layout_msglist_input, this)
         listView = findViewById(R.id.listView)
         inputView = findViewById(R.id.inputView)
+        inputView.onStateNotify = object : ((Animator?, Int) -> Unit) {
+            override fun invoke(p1: Animator?, p2: Int) {
+                listViewMove(p1, p2)
+            }
+        }
     }
 
     fun setActivity(owner: LifecycleOwner?) {
@@ -40,13 +45,11 @@ class IMLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             keyBoardState.observe(own, Observer<Boolean?> {
                 it?.apply {
                     showToast(if (this) "open" else "close")
-                    listViewMove(this, keyBoardHeight.value)
                 }
             })
 
             keyBoardHeight.observe(own, Observer<Int?> { result ->
-                showToast("keyBoardHeight--${result}")
-                listViewMove(keyBoardState.value, result)
+                inputView.keyboardHeight = result
             })
         }
     }
@@ -56,20 +59,37 @@ class IMLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
     }
 
 
-    private fun listViewMove(keyboardShow: Boolean?, keyBoardHeight: Int?) {
-        keyboardShow ?: return
+    /**
+     * listViewAnimate
+     *  0 listView不动
+     *  1 上移动画
+     * -1 回到初始位置
+     */
+    private fun listViewMove(animatorInput: Animator?, listViewAnimate: Int) {
+        val keyBoardHeight = inputView.keyboardHeight
         keyBoardHeight ?: return
-        val animatorInput = inputView.getAnimate(keyboardShow, keyBoardHeight)
-
-        val from = if (keyboardShow) 0f else -keyBoardHeight.toFloat()
-        val to = if (keyboardShow) -keyBoardHeight.toFloat() else 0f
+        if (animatorInput == null && listViewAnimate == 0) {
+            return
+        }
+        val animatorSet = AnimatorSet()
+        animatorSet.duration = 250
+        animatorSet.interpolator = DecelerateInterpolator()
+        if (listViewAnimate == 0) {
+            if (animatorInput != null) {
+                animatorSet.play(animatorInput)
+                animatorSet.start()
+            }
+            return
+        }
+        val from = if (listViewAnimate==1) 0f else -keyBoardHeight.toFloat()
+        val to = if (listViewAnimate==1) -keyBoardHeight.toFloat() else 0f
         val animatorListview: ObjectAnimator = ObjectAnimator.ofFloat(listView, "translationY", from, to)
         animatorListview.addListener(object : Animator.AnimatorListener {
             override fun onAnimationStart(animation: Animator?) {
             }
 
             override fun onAnimationEnd(animation: Animator?) {
-                if (keyboardShow) {
+                if (listViewAnimate==1) {
                     (listView.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(listView.childCount - 1, Integer.MIN_VALUE)
                 }
             }
@@ -81,9 +101,7 @@ class IMLayout @JvmOverloads constructor(context: Context, attrs: AttributeSet? 
             }
         })
 
-        val animatorSet = AnimatorSet()
-        animatorSet.duration = 250
-        animatorSet.interpolator = DecelerateInterpolator()
+
         animatorSet.play(animatorInput).with(animatorListview)
         animatorSet.start()
     }

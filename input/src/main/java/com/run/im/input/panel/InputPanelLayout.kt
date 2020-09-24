@@ -1,5 +1,6 @@
 package com.run.im.input.panel
 
+import android.animation.Animator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.animation.addListener
 import com.run.im.input.R
 import com.run.im.input.invisible
 import com.run.im.input.keyboard.hideKeyboard
@@ -24,6 +26,8 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
     private var isAudioShow = false
     private var isEmojiShow = false
     private var isSpecialShow = false
+    var keyboardHeight: Int? = null
+    var onStateNotify: ((animator: Animator?, listViewAnimate: Int) -> Unit)? = null
 
     override val containerView: View?
         get() = LayoutInflater.from(context).inflate(R.layout.layout_input_panel, this)
@@ -57,13 +61,17 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
             }
             if (isEmojiShow) {
                 emotionImageView.setImageResource(R.mipmap.ic_cheat_emo)
-                //TODO 弹键盘&放大
-                doAnimate(enlarge = 1, keyboardShow = 1)
+                //TODO 弹键盘&不做动画
+                doAnimate(enlarge = 0, keyboardShow = 1)
+                return
             }
             if (isSpecialShow) {
-                //TODO 弹键盘&放大
-                doAnimate(enlarge = 1, keyboardShow = 1)
+                //TODO 弹键盘&不做动画
+                doAnimate(enlarge = 0, keyboardShow = 1)
+                return
             }
+            //TODO 弹键盘&放大动画
+            doAnimate(enlarge = 1, keyboardShow = 1)
             return
         }
         //点击了special
@@ -229,26 +237,17 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
      * -1 缩小or关闭键盘
      */
     private fun doAnimate(enlarge: Int, keyboardShow: Int) {
+        keyboardHeight ?: return
         if (enlarge == 0 && keyboardShow == 0) {//00
+            onStateNotify?.invoke(null, -enlarge)
             return
         }
-        if (enlarge == 0) {
-            showKeyBoard()
+        if (enlarge == 0) {//01 0-1
+            showKeyBoard(keyboardShow == 1)
+            onStateNotify?.invoke(null, -enlarge)
+            return
         }
-
-
-    }
-
-
-    /**
-     * 输入框下面的部分的高度动态调整
-     */
-    fun getAnimate(keyboardShow: Boolean?, height: Int? = com.run.im.input.keyboard.keyBoardHeight.value): ValueAnimator? {
-        keyboardShow ?: return null
-        height ?: return null
-        val from = if (keyboardShow) 1 else height
-        val to = if (keyboardShow) height else 1
-        val animator: ValueAnimator = ValueAnimator.ofInt(from, to)
+        val animator = getAnimator(enlarge == 1, keyboardHeight!!)
         animator.addUpdateListener {
             val heightAnimate = it.animatedValue as Int
             Log.e("onKeyboard--->", heightAnimate.toString())
@@ -259,10 +258,22 @@ class InputPanelLayout @JvmOverloads constructor(context: Context, attrs: Attrib
             requestLayout()
             (parent as ViewGroup).requestLayout()
         }
-        return animator
+        animator.addListener(onStart = {
+            if (keyboardShow != 0) {
+                showKeyBoard(keyboardShow == 1)
+            }
+        })
+        onStateNotify?.invoke(animator, -enlarge)
     }
 
-    fun showKeyBoard(show: Boolean) {
+
+    private fun getAnimator(enlarge: Boolean, height: Int): ValueAnimator {
+        val from = if (enlarge) 1 else height
+        val to = if (enlarge) height else 1
+        return ValueAnimator.ofInt(from, to)
+    }
+
+    private fun showKeyBoard(show: Boolean) {
         if (show) {
             editText.showKeyboard()
         } else {
